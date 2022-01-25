@@ -1,0 +1,16 @@
+@media (min-width: 768px) {
+	movies-container {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.guide-button {
+		display: none;
+	}
+
+	.movies {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
+		gap: 1.5rem;
+	}
+}

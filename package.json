@@ -1,0 +1,19 @@
+{
+  "name": "moviefan",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build-bootstrap": "sass src/sass/bootstrap/bootstrap.scss public/css/bootstrap.css --style=compressed",
+    "watch-bootstrap": "nodemon -e scss -x \"npm run build-bootstrap\"",
+    "build-main": "sass src/sass/main.scss public/css/main.css --style=compressed",
+    "watch-main": "nodemon -e scss -x \"npm run build-main\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "2.0.15",
+    "sass": "^1.49.0"
+  }
+}
