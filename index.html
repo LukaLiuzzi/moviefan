@@ -27,15 +27,22 @@
 	<body>
 		<header>
 			<section class="container header">
-				<h1 class="mt-4">Movie Fan</h1>
+				<h1 class="mt-4"><a href="index.html">Movie Fan</a></h1>
 
 				<div class="row d-flex justify-content-center mt-5">
 					<div class="col-lg-8">
 						<div class="card">
-							<div class="input-box d-flex align-items-center">
-								<input type="text" placeholder="Buscar" class="form-control" />
-								<button type="submit"><i class="fa fa-search"></i></button>
-							</div>
+							<form id="form" class="input-box d-flex align-items-center">
+								<input
+									id="search"
+									type="text"
+									placeholder="Buscar"
+									class="form-control"
+								/>
+								<button type="submit">
+									<i class="fa fa-search"></i>
+								</button>
+							</form>
 						</div>
 					</div>
 				</div>
@@ -84,6 +91,7 @@
 												Generos
 											</a>
 											<ul
+												id="tags"
 												class="dropdown-menu fs-4 text-center"
 												aria-labelledby="navbarDropdown"
 											>
@@ -107,188 +115,29 @@
 						</nav>
 					</div>
 					<div class="col-12 col-lg-10 mt-5 mt-lg-0">
-						<div class="row">
-							<div class="col-12 col-md-6 col-lg-4 col-xxl-2 mb-5">
+						<div class="row" id="movies">
+							<!-- <div class="col-12 col-md-6 col-lg-4 col-xxl-2 mb-5">
 								<div class="card">
 									<img
-										src="https://dummyimage.com/600x400/000/fff"
+										src="https://dummyimage.com/180x271/000/fff"
 										class="card-img-top"
 										alt="..."
 									/>
 									<div class="card-body">
-										<h5 class="card-title fs-1">Card title</h5>
-										<p class="card-text fs-3">
-											Some quick example text to build on the card title and
-											make up the bulk of the card's content.
+										<h5 class="card-title m-0 fs-1">Card title</h5>
+										<p class="card-text overview fs-3">
+											Lorem ipsum dolor sit amet consectetur adipisicing elit.
+											Nemo illo inventore molestiae totam hic quo ipsam?
+											Consequuntur nemo deleniti eius dolorem ea saepe nesciunt
 										</p>
 									</div>
 									<ul class="list-group list-group-flush">
 										<li class="list-group-item">Accion</li>
 										<li class="list-group-item">9.0</li>
-										<li class="list-group-item">A third item</li>
+										<li class="list-group-item">2021-12-15</li>
 									</ul>
-									<div class="card-body">
-										<a href="#" class="card-link">Card link</a>
-										<a href="#" class="card-link">Another link</a>
-									</div>
 								</div>
-							</div>
-
-							<div class="col-12 col-md-6 col-lg-4 col-xxl-2 mb-5">
-								<div class="card">
-									<img
-										src="https://dummyimage.com/600x400/000/fff"
-										class="card-img-top"
-										alt="..."
-									/>
-									<div class="card-body">
-										<h5 class="card-title fs-1">Card title</h5>
-										<p class="card-text fs-3">
-											Some quick example text to build on the card title and
-											make up the bulk of the card's content.
-										</p>
-									</div>
-									<ul class="list-group list-group-flush">
-										<li class="list-group-item">Accion</li>
-										<li class="list-group-item">9.0</li>
-										<li class="list-group-item">A third item</li>
-									</ul>
-									<div class="card-body">
-										<a href="#" class="card-link">Card link</a>
-										<a href="#" class="card-link">Another link</a>
-									</div>
-								</div>
-							</div>
-
-							<div class="col-12 col-md-6 col-lg-4 col-xxl-2 mb-5">
-								<div class="card">
-									<img
-										src="https://dummyimage.com/600x400/000/fff"
-										class="card-img-top"
-										alt="..."
-									/>
-									<div class="card-body">
-										<h5 class="card-title fs-1">Card title</h5>
-										<p class="card-text fs-3">
-											Some quick example text to build on the card title and
-											make up the bulk of the card's content.
-										</p>
-									</div>
-									<ul class="list-group list-group-flush">
-										<li class="list-group-item">Accion</li>
-										<li class="list-group-item">9.0</li>
-										<li class="list-group-item">A third item</li>
-									</ul>
-									<div class="card-body">
-										<a href="#" class="card-link">Card link</a>
-										<a href="#" class="card-link">Another link</a>
-									</div>
-								</div>
-							</div>
-
-							<div class="col-12 col-md-6 col-lg-4 col-xxl-2 mb-5">
-								<div class="card">
-									<img
-										src="https://dummyimage.com/600x400/000/fff"
-										class="card-img-top"
-										alt="..."
-									/>
-									<div class="card-body">
-										<h5 class="card-title fs-1">Card title</h5>
-										<p class="card-text fs-3">
-											Some quick example text to build on the card title and
-											make up the bulk of the card's content.
-										</p>
-									</div>
-									<ul class="list-group list-group-flush">
-										<li class="list-group-item">Accion</li>
-										<li class="list-group-item">9.0</li>
-										<li class="list-group-item">A third item</li>
-									</ul>
-									<div class="card-body">
-										<a href="#" class="card-link">Card link</a>
-										<a href="#" class="card-link">Another link</a>
-									</div>
-								</div>
-							</div>
-
-							<div class="col-12 col-md-6 col-lg-4 col-xxl-2 mb-5">
-								<div class="card">
-									<img
-										src="https://dummyimage.com/600x400/000/fff"
-										class="card-img-top"
-										alt="..."
-									/>
-									<div class="card-body">
-										<h5 class="card-title fs-1">Card title</h5>
-										<p class="card-text fs-3">
-											Some quick example text to build on the card title and
-											make up the bulk of the card's content.
-										</p>
-									</div>
-									<ul class="list-group list-group-flush">
-										<li class="list-group-item">Accion</li>
-										<li class="list-group-item">9.0</li>
-										<li class="list-group-item">A third item</li>
-									</ul>
-									<div class="card-body">
-										<a href="#" class="card-link">Card link</a>
-										<a href="#" class="card-link">Another link</a>
-									</div>
-								</div>
-							</div>
-
-							<div class="col-12 col-md-6 col-lg-4 col-xxl-2 mb-5">
-								<div class="card">
-									<img
-										src="https://dummyimage.com/600x400/000/fff"
-										class="card-img-top"
-										alt="..."
-									/>
-									<div class="card-body">
-										<h5 class="card-title fs-1">Card title</h5>
-										<p class="card-text fs-3">
-											Some quick example text to build on the card title and
-											make up the bulk of the card's content.
-										</p>
-									</div>
-									<ul class="list-group list-group-flush">
-										<li class="list-group-item">Accion</li>
-										<li class="list-group-item">9.0</li>
-										<li class="list-group-item">A third item</li>
-									</ul>
-									<div class="card-body">
-										<a href="#" class="card-link">Card link</a>
-										<a href="#" class="card-link">Another link</a>
-									</div>
-								</div>
-							</div>
-
-							<div class="col-12 col-md-6 col-lg-4 col-xxl-2 mb-5">
-								<div class="card">
-									<img
-										src="https://dummyimage.com/600x400/000/fff"
-										class="card-img-top"
-										alt="..."
-									/>
-									<div class="card-body">
-										<h5 class="card-title fs-1">Card title</h5>
-										<p class="card-text fs-3">
-											Some quick example text to build on the card title and
-											make up the bulk of the card's content.
-										</p>
-									</div>
-									<ul class="list-group list-group-flush">
-										<li class="list-group-item">Accion</li>
-										<li class="list-group-item">9.0</li>
-										<li class="list-group-item">A third item</li>
-									</ul>
-									<div class="card-body">
-										<a href="#" class="card-link">Card link</a>
-										<a href="#" class="card-link">Another link</a>
-									</div>
-								</div>
-							</div>
+							</div> -->
 						</div>
 					</div>
 				</div>

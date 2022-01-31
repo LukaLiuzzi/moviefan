@@ -43,5 +43,34 @@ main {
 
 	.card {
 		width: 100%;
+		height: 100%;
+		overflow-y: hidden;
+		position: relative;
+		background-color: $dark-red;
+		color: $black;
+
+		ul li {
+			background-color: $dark-red;
+			color: $black;
+		}
+
+		&:hover .overview {
+			visibility: visible;
+			opacity: 1;
+			overflow-y: auto;
+		}
+		.overview {
+			position: absolute;
+			background-color: lighten($dark-red, 20);
+			color: $black;
+			left: 0;
+			top: 0;
+			visibility: hidden;
+			opacity: 0;
+			transition: visibility 0s, opacity 0.5s linear;
+			padding: 1rem;
+			z-index: 1;
+			height: 100%;
+		}
 	}
 }

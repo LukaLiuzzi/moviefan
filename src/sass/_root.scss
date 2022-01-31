@@ -29,6 +29,7 @@ body {
 	font-family: $main-font;
 	font-size: 1.6rem;
 	background-color: $dark-red;
+	text-transform: uppercase;
 }
 p {
 	color: $black;
@@ -48,11 +49,15 @@ h3 {
 	text-align: center;
 }
 
-h1 {
+h1 a {
 	font-size: 4rem;
 	color: rgb(43, 190, 146);
 	text-transform: uppercase;
 	text-shadow: 2px 2px 4px #000000;
+
+	&:hover {
+		color: rgb(43, 190, 146);
+	}
 }
 h2 {
 	font-size: 3.6rem;
