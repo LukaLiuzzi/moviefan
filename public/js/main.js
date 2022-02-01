@@ -1,4 +1,6 @@
 // Declaration of variables
+
+// API variables
 const API_KEY = "api_key=e11854d9b2dd14d971cfa32f0cc594d7";
 const BASE_URL = "https://api.themoviedb.org/3/";
 const API_URL =
@@ -88,21 +90,40 @@ const genres = [
 	},
 ];
 
+// DOM variables
 const movies = document.getElementById("movies");
 const search = document.getElementById("search");
 const form = document.getElementById("form");
 const tags = document.getElementById("tags");
+const prev = document.getElementById("prev");
+const current = document.getElementById("current");
+const next = document.getElementById("next");
+
+let currentPage = 1;
+let nextPage = 2;
+let prevPage = 3;
+let lastUrl = "";
+let totalPages = 100;
 
 // Functions
 
 // Fetching API
 const getMovies = (url) => {
+	lastUrl = url;
 	fetch(url)
 		.then((res) => res.json())
 		.then((data) => {
 			console.log(data.results);
 			if (data.results.length !== 0) {
 				showMovies(data.results);
+				currentPage = data.page;
+				nextPage = currentPage + 1;
+				prevPage = currentPage - 1;
+				totalPages = data.total_pages;
+
+				current.textContent = currentPage;
+
+				document.body.scrollIntoView({ behavior: "smooth" });
 			} else {
 				movies.innerHTML = `<h2 class="text-center">No se encontraron peliculas </h2>`;
 			}
@@ -113,7 +134,7 @@ const getMovies = (url) => {
 const showMovies = (data) => {
 	data.forEach((movie) => {
 		const { title, poster_path, vote_average, overview, release_date } = movie;
-		const card = `<div class="col-12 col-md-6 col-lg-4 col-xxl-2 mb-5">
+		const card = `<div class="col-12 col-md-6 col-lg-4 col-xxl-3 mb-5">
 		<div class="card">
 			<img
 				src="${
@@ -235,6 +256,38 @@ const clearBtn = () => {
 		tags.append(clear);
 	}
 };
+
+// Pagination
+const pageCall = (page) => {
+	let urlSplit = lastUrl.split("?");
+	let queryParams = urlSplit[1].split("&");
+	let key = queryParams[queryParams.length - 1].split("=");
+	if (key[0] != "page") {
+		let url = lastUrl + "&page=" + page;
+		movies.innerHTML = "";
+		getMovies(url);
+	} else {
+		key[1] = page.toString();
+		let a = key.join("=");
+		queryParams[queryParams.length - 1] = a;
+		let b = queryParams.join("&");
+		let url = urlSplit[0] + "?" + b;
+		movies.innerHTML = "";
+		getMovies(url);
+	}
+};
+
+prev.addEventListener("click", () => {
+	if (prevPage > 0) {
+		pageCall(prevPage);
+	}
+});
+
+next.addEventListener("click", () => {
+	if (nextPage <= totalPages) {
+		pageCall(nextPage);
+	}
+});
 
 // Painting default results
 getMovies(API_URL);

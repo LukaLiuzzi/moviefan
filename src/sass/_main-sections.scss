@@ -88,3 +88,37 @@ main {
 		cursor: pointer;
 	}
 }
+
+.page-container {
+	display: flex;
+	gap: 2rem;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 3rem;
+
+	#current {
+		height: 3rem;
+		width: 3rem;
+		background-color: lighten($dark-red, 20);
+		border-radius: 50%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 2rem;
+		font-weight: bold;
+		box-shadow: 0px 0px 5px 1px $black;
+	}
+
+	#prev,
+	#next {
+		background-color: lighten($dark-red, 20);
+		padding: 0.5rem 1rem;
+		border-radius: 5px;
+		cursor: pointer;
+		box-shadow: 0px 0px 5px 1px $black;
+
+		&:hover {
+			background-color: darken($dark-red, 10);
+		}
+	}
+}
