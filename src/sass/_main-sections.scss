@@ -36,6 +36,9 @@ main {
 	}
 	.navbar-nav {
 		flex-direction: column !important;
+		background-color: darken($dark-red, 5);
+		border-radius: 5px;
+		box-shadow: 0px 0px 5px 1px darken($dark-red, 10);
 	}
 	.dropdown-menu {
 		background: darken($dark-red, 10);
@@ -48,6 +51,8 @@ main {
 		position: relative;
 		background-color: $dark-red;
 		color: $black;
+		border-radius: 5px;
+		box-shadow: 0px 0px 5px 1px darken($dark-red, 10);
 
 		ul li {
 			background-color: $dark-red;
@@ -72,5 +77,14 @@ main {
 			z-index: 1;
 			height: 100%;
 		}
+	}
+}
+
+#tags {
+	.highlight {
+		background-color: #fff;
+	}
+	li {
+		cursor: pointer;
 	}
 }
