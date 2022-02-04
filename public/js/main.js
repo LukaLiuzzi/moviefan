@@ -293,11 +293,34 @@
 // getMovies(API_URL);
 
 // SWIPER
-let swiper = new Swiper(".swiper-container", {
-	slidesPerView: 5,
-	spaceBetween: 10,
-	slidesPerGroup: 2,
+let swiperPopular = new Swiper(".swiper-container-popular", {
+	slidesPerGroup: 1,
 	loop: true,
+	grabCursor: true,
+	navigation: {
+		nextEl: ".swiper-button-next",
+		prevEl: ".swiper-button-prev",
+	},
+	breakpoints: {
+		100: {
+			slidesPerView: 1,
+			spaceBetween: 10,
+		},
+		768: {
+			slidesPerView: 2,
+			spaceBetween: 10,
+		},
+		1024: {
+			slidesPerView: 3,
+			spaceBetween: 60,
+		},
+	},
+});
+
+let swiperLatest = new Swiper(".swiper-container-latest", {
+	slidesPerGroup: 1,
+	loop: true,
+	grabCursor: true,
 	navigation: {
 		nextEl: ".swiper-button-next",
 		prevEl: ".swiper-button-prev",
@@ -307,17 +330,13 @@ let swiper = new Swiper(".swiper-container", {
 			slidesPerView: 2,
 			spaceBetween: 10,
 		},
-		640: {
+		768: {
 			slidesPerView: 3,
 			spaceBetween: 10,
 		},
-		768: {
-			slidesPerView: 4,
-			spaceBetween: 10,
-		},
 		1024: {
-			slidesPerView: 5,
-			spaceBetween: 10,
+			slidesPerView: 6,
+			spaceBetween: 30,
 		},
 	},
 });
