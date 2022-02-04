@@ -13,6 +13,11 @@
 			crossorigin="anonymous"
 			referrerpolicy="no-referrer"
 		/>
+		<!-- SWIPER -->
+		<link
+			rel="stylesheet"
+			href="https://unpkg.com/swiper@8/swiper-bundle.min.css"
+		/>
 		<!-- CSS -->
 		<link rel="stylesheet" href="public/css/bootstrap.css" />
 		<link
@@ -26,111 +31,218 @@
 	</head>
 	<body>
 		<header>
-			<section class="container header">
-				<h1 class="mt-4"><a href="index.html">Movie Fan</a></h1>
+			<section class="header">
+				<nav class="navbar">
+					<div class="container-fluid">
+						<h1><a href="index.html">Movie Fan</a></h1>
 
-				<div class="row d-flex justify-content-center mt-5">
-					<div class="col-lg-8">
-						<div class="card">
-							<form id="form" class="input-box d-flex align-items-center">
-								<input
-									id="search"
-									type="text"
-									placeholder="Buscar"
-									class="form-control"
-								/>
-								<button type="submit">
-									<i class="fa fa-search"></i>
-								</button>
-							</form>
+						<form id="form" class="search-box d-flex align-items-center">
+							<input
+								id="search"
+								type="text"
+								placeholder="Buscar peliculas"
+								class="form-control"
+							/>
+							<button type="submit">
+								<i class="fa fa-search"></i>
+							</button>
+						</form>
+
+						<div class="dropdown">
+							<button
+								class="dropdown-toggle"
+								type="button"
+								id="dropdownMenuButton1"
+								data-bs-toggle="dropdown"
+								aria-expanded="false"
+							>
+								Generos
+							</button>
+							<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+								<li class="dropdown-item">Aventura</li>
+								<li class="dropdown-item">Aventura</li>
+								<li class="dropdown-item">Aventura</li>
+								<li class="dropdown-item">Aventura</li>
+								<li class="dropdown-item">Aventura</li>
+								<li class="dropdown-item">Aventura</li>
+								<li class="dropdown-item">Aventura</li>
+								<li class="dropdown-item">Aventura</li>
+								<li class="dropdown-item">Aventura</li>
+							</ul>
 						</div>
 					</div>
-				</div>
+				</nav>
 			</section>
 		</header>
 
 		<main>
-			<section class="container-fluid mt-5">
-				<div class="row">
-					<div class="col-12 col-lg-2">
-						<nav class="navbar navbar-expand-lg navbar-light fs-2">
-							<div class="container-fluid d-flex justify-content-center">
-								<button
-									class="navbar-toggler"
-									type="button"
-									data-bs-toggle="collapse"
-									data-bs-target="#navbarSupportedContent"
-									aria-controls="navbarSupportedContent"
-									aria-expanded="false"
-									aria-label="Toggle navigation"
-								>
-									<span class="navbar-toggler-icon"></span>
-								</button>
-								<div
-									class="collapse navbar-collapse"
-									id="navbarSupportedContent"
-								>
-									<ul class="navbar-nav me-auto mb-2 mb-lg-0 text-center">
-										<li class="nav-item">
-											<a class="nav-link" aria-current="page" href="#"
-												>Mejor valoradas</a
-											>
-										</li>
-										<li class="nav-item">
-											<a class="nav-link" href="#">Ultimos estrenos</a>
-										</li>
-										<li><hr class="dropdown-divider" /></li>
-										<li class="nav-item dropdown">
-											<a
-												class="nav-link dropdown-toggle text-center"
-												href="#"
-												id="navbarDropdown"
-												role="button"
-												data-bs-toggle="dropdown"
-												aria-expanded="false"
-											>
-												Generos
-											</a>
-											<ul
-												id="tags"
-												class="fs-2 text-start p-0"
-												aria-labelledby="navbarDropdown"
-											>
-												<!-- <li id="${genre.id}" class="dropdown-item"></li> -->
-											</ul>
-										</li>
-									</ul>
-								</div>
+			<section class="popular-movies container-fluid swiper">
+				<div class="swiper-wrapper d-flex gap-5">
+					<div class="popular-card swiper-slide">
+						<img class="img" src="https://picsum.photos/500/300" alt="" />
+						<div class="image-overlay">
+							<div class="overview">
+								<h3>Titulo de la pelicula</h3>
+								<p>
+									Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse
+									nesciunt asperiores assumenda. Sint molestias nisi cumque
+									fugiat saepe quos harum. Ad officia fugit debitis corrupti
+									excepturi aliquam perspiciatis illum. Quis recusandae error
+									doloremque facilis iure harum quam, voluptates itaque aliquid
+									alias odio consequuntur nesciunt assumenda. Pariatur numquam
+									exercitationem praesentium cupiditate!
+								</p>
+
+								<button class="trailer-btn">Ver trailer</button>
 							</div>
-						</nav>
+						</div>
 					</div>
-					<div class="col-12 col-lg-10 mt-5 mt-lg-0">
-						<div class="row" id="movies">
-							<!-- <div class="col-12 col-md-6 col-lg-4 col-xxl-2 mb-5">
-								<div class="card">
-									<img
-										src="https://dummyimage.com/180x271/000/fff"
-										class="card-img-top"
-										alt="..."
-									/>
-									<div class="card-body">
-										<h5 class="card-title m-0 fs-1">Card title</h5>
-										<p class="card-text overview fs-3">
-											Lorem ipsum dolor sit amet consectetur adipisicing elit.
-											Nemo illo inventore molestiae totam hic quo ipsam?
-											Consequuntur nemo deleniti eius dolorem ea saepe nesciunt
-										</p>
-									</div>
-									<ul class="list-group list-group-flush">
-										<li class="list-group-item">Accion</li>
-										<li class="list-group-item">9.0</li>
-										<li class="list-group-item">2021-12-15</li>
-									</ul>
-								</div>
-							</div> -->
+
+					<div class="popular-card swiper-slide">
+						<img class="img" src="https://picsum.photos/500/300" alt="" />
+						<div class="image-overlay">
+							<div class="overview">
+								<h3>Titulo de la pelicula</h3>
+								<p>
+									Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse
+									nesciunt asperiores assumenda. Sint molestias nisi cumque
+									fugiat saepe quos harum. Ad officia fugit debitis corrupti
+									excepturi aliquam perspiciatis illum. Quis recusandae error
+									doloremque facilis iure harum quam, voluptates itaque aliquid
+									alias odio consequuntur nesciunt assumenda. Pariatur numquam
+									exercitationem praesentium cupiditate!
+								</p>
+
+								<button class="trailer-btn">Ver trailer</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="popular-card swiper-slide">
+						<img class="img" src="https://picsum.photos/500/300" alt="" />
+						<div class="image-overlay">
+							<div class="overview">
+								<h3>Titulo de la pelicula</h3>
+								<p>
+									Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse
+									nesciunt asperiores assumenda. Sint molestias nisi cumque
+									fugiat saepe quos harum. Ad officia fugit debitis corrupti
+									excepturi aliquam perspiciatis illum. Quis recusandae error
+									doloremque facilis iure harum quam, voluptates itaque aliquid
+									alias odio consequuntur nesciunt assumenda. Pariatur numquam
+									exercitationem praesentium cupiditate!
+								</p>
+
+								<button class="trailer-btn">Ver trailer</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="popular-card swiper-slide">
+						<img class="img" src="https://picsum.photos/500/300" alt="" />
+						<div class="image-overlay">
+							<div class="overview">
+								<h3>Titulo de la pelicula</h3>
+								<p>
+									Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse
+									nesciunt asperiores assumenda. Sint molestias nisi cumque
+									fugiat saepe quos harum. Ad officia fugit debitis corrupti
+									excepturi aliquam perspiciatis illum. Quis recusandae error
+									doloremque facilis iure harum quam, voluptates itaque aliquid
+									alias odio consequuntur nesciunt assumenda. Pariatur numquam
+									exercitationem praesentium cupiditate!
+								</p>
+
+								<button class="trailer-btn">Ver trailer</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="popular-card swiper-slide">
+						<img class="img" src="https://picsum.photos/500/300" alt="" />
+						<div class="image-overlay">
+							<div class="overview">
+								<h3>Titulo de la pelicula</h3>
+								<p>
+									Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse
+									nesciunt asperiores assumenda. Sint molestias nisi cumque
+									fugiat saepe quos harum. Ad officia fugit debitis corrupti
+									excepturi aliquam perspiciatis illum. Quis recusandae error
+									doloremque facilis iure harum quam, voluptates itaque aliquid
+									alias odio consequuntur nesciunt assumenda. Pariatur numquam
+									exercitationem praesentium cupiditate!
+								</p>
+
+								<button class="trailer-btn">Ver trailer</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="popular-card swiper-slide">
+						<img class="img" src="https://picsum.photos/500/300" alt="" />
+						<div class="image-overlay">
+							<div class="overview">
+								<h3>Titulo de la pelicula</h3>
+								<p>
+									Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse
+									nesciunt asperiores assumenda. Sint molestias nisi cumque
+									fugiat saepe quos harum. Ad officia fugit debitis corrupti
+									excepturi aliquam perspiciatis illum. Quis recusandae error
+									doloremque facilis iure harum quam, voluptates itaque aliquid
+									alias odio consequuntur nesciunt assumenda. Pariatur numquam
+									exercitationem praesentium cupiditate!
+								</p>
+
+								<button class="trailer-btn">Ver trailer</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="popular-card swiper-slide">
+						<img class="img" src="https://picsum.photos/500/300" alt="" />
+						<div class="image-overlay">
+							<div class="overview">
+								<h3>Titulo de la pelicula</h3>
+								<p>
+									Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse
+									nesciunt asperiores assumenda. Sint molestias nisi cumque
+									fugiat saepe quos harum. Ad officia fugit debitis corrupti
+									excepturi aliquam perspiciatis illum. Quis recusandae error
+									doloremque facilis iure harum quam, voluptates itaque aliquid
+									alias odio consequuntur nesciunt assumenda. Pariatur numquam
+									exercitationem praesentium cupiditate!
+								</p>
+
+								<button class="trailer-btn">Ver trailer</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="popular-card swiper-slide">
+						<img class="img" src="https://picsum.photos/500/300" alt="" />
+						<div class="image-overlay">
+							<div class="overview">
+								<h3>Titulo de la pelicula</h3>
+								<p>
+									Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse
+									nesciunt asperiores assumenda. Sint molestias nisi cumque
+									fugiat saepe quos harum. Ad officia fugit debitis corrupti
+									excepturi aliquam perspiciatis illum. Quis recusandae error
+									doloremque facilis iure harum quam, voluptates itaque aliquid
+									alias odio consequuntur nesciunt assumenda. Pariatur numquam
+									exercitationem praesentium cupiditate!
+								</p>
+
+								<button class="trailer-btn">Ver trailer</button>
+							</div>
 						</div>
 					</div>
 				</div>
+
+				<div class="swiper-button-prev"></div>
+				<div class="swiper-button-next"></div>
+
+				<div class="swiper-scrollbar"></div>
 			</section>
 
 			<section class="container page-container">
@@ -141,6 +253,7 @@
 		</main>
 
 		<script src="public/js/bootstrap.bundle.js"></script>
+		<script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
 		<script src="public/js/main.js"></script>
 	</body>
 </html>
