@@ -4,9 +4,38 @@
 			width: 50%;
 		}
 	}
-	.popular-movies {
-		.popular-card {
-			width: 50rem !important;
+
+	.movie {
+		.image-overlay {
+			.overview {
+				h3 {
+					font-size: 1.5rem;
+				}
+
+				p {
+					font-size: 1.2rem;
+				}
+			}
+		}
+	}
+
+	.subtitle {
+		font-size: 3rem;
+	}
+}
+
+@media (min-width: 1024px) {
+	.movie {
+		.image-overlay {
+			.overview {
+				h3 {
+					font-size: 2rem;
+				}
+
+				p {
+					font-size: 1.5rem;
+				}
+			}
 		}
 	}
 }
