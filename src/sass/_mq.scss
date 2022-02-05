@@ -22,6 +22,20 @@
 	.subtitle {
 		font-size: 3rem;
 	}
+
+	.latest-movies-slider {
+		.swiper-container-latest {
+			img {
+				height: 35rem;
+			}
+		}
+	}
+
+	.movies-container {
+		.grid-container {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
 }
 
 @media (min-width: 1024px) {
@@ -36,6 +50,40 @@
 					font-size: 1.5rem;
 				}
 			}
+		}
+	}
+
+	.popular-movies-slider,
+	.latest-movies-slider {
+		.swiper-slide {
+			transition: 250ms all;
+
+			&:hover {
+				transform: scale(1.2);
+				z-index: 1;
+			}
+
+			&:first-child:hover {
+				margin: 0 40px;
+			}
+
+			&:last-child:hover {
+				margin: 0 -40px;
+			}
+		}
+	}
+
+	.movies-container {
+		.grid-container {
+			grid-template-columns: 1fr 1fr 1fr 1fr;
+		}
+	}
+}
+
+@media (min-width: 1440px) {
+	.movies-container {
+		.grid-container {
+			grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 		}
 	}
 }

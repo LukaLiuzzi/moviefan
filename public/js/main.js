@@ -296,6 +296,11 @@
 let swiperPopular = new Swiper(".swiper-container-popular", {
 	slidesPerGroup: 1,
 	loop: true,
+	autoplay: {
+		delay: 3000,
+	},
+	speed: 1000,
+	centeredSlides: true,
 	grabCursor: true,
 	navigation: {
 		nextEl: ".swiper-button-next",
@@ -320,6 +325,11 @@ let swiperPopular = new Swiper(".swiper-container-popular", {
 let swiperLatest = new Swiper(".swiper-container-latest", {
 	slidesPerGroup: 1,
 	loop: true,
+	autoplay: {
+		delay: 5000,
+	},
+	speed: 1000,
+	centeredSlides: true,
 	grabCursor: true,
 	navigation: {
 		nextEl: ".swiper-button-next",
