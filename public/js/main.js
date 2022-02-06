@@ -1,16 +1,20 @@
 // Declaration of variables
 
 // API variables
-const API_KEY = "api_key=e11854d9b2dd14d971cfa32f0cc594d7";
-const BASE_URL = "https://api.themoviedb.org/3/";
-const API_URL =
-	BASE_URL +
-	"discover/movie?" +
-	API_KEY +
+const api_key = "api_key=e11854d9b2dd14d971cfa32f0cc594d7";
+
+const base_url = "https://api.themoviedb.org/3";
+
+const final_url =
+	base_url +
+	"/discover/movie?" +
+	api_key +
 	"&primary_release_date.gte=2021-01-31&primary_release_date.lte=2022-01-31&language=es";
 
-const IMG_BASE_URL = "https://image.tmdb.org/t/p/w500";
-const SEARCH_URL = BASE_URL + "search/movie?" + API_KEY;
+const img_url = "https://image.tmdb.org/t/p/w500";
+
+const SEARCH_URL = base_url + "search/movie?" + api_key;
+
 const genres = [
 	{
 		id: 28,
@@ -90,9 +94,14 @@ const genres = [
 	},
 ];
 
+const request = {
+	fetchPopular: `${base_url}/discover/movie?${api_key}&language=es&sort_by=popularity.desc`,
+	fetchTrending: `${base_url}/trending/movie/day?${api_key}&language=es`,
+};
+
 // DOM variables
 const movies = document.getElementById("movies");
-const popularMovies = document.getElementById("popular-movies");
+const trendingMovies = document.getElementById("trending-movies");
 const latestMovies = document.getElementById("latest-movies");
 const search = document.getElementById("search");
 const form = document.getElementById("form");
@@ -110,6 +119,8 @@ let totalPages = 100;
 // Functions
 
 // Fetching API
+
+// Default movies
 const getMovies = (url) => {
 	lastUrl = url;
 	fetch(url)
@@ -125,14 +136,27 @@ const getMovies = (url) => {
 
 				current.textContent = currentPage;
 
-				document
-					.querySelector(".movies-container")
-					.scrollIntoView({ behavior: "smooth" });
+				// document
+				// 	.querySelector(".movies-container")
+				// 	.scrollIntoView({ behavior: "smooth" });
 			} else {
 				movies.innerHTML = `<h2 class="text-center">No se encontraron peliculas </h2>`;
 			}
 		});
 };
+
+// Trending movies
+const getTrendingMovies = (url) => {
+	fetch(url)
+		.then((res) => res.json())
+		.then((data) => {
+			console.log(data.results);
+			if (data.results.length !== 0) {
+				showTrendingMovies(data.results);
+			}
+		});
+};
+
 // Showing data in DOM
 const showMovies = (data) => {
 	data.forEach((movie) => {
@@ -140,7 +164,7 @@ const showMovies = (data) => {
 		const cardMovie = `<div class="movie">
 		<img src="${
 			poster_path
-				? IMG_BASE_URL + poster_path
+				? img_url + poster_path
 				: "https://picsum.photos/id/237/1000/1000"
 		}" alt="${title}" />
 		<div class="image-overlay">
@@ -158,10 +182,43 @@ const showMovies = (data) => {
 				<p>
 				${overview !== "" ? overview : "No hay información "}
 				</p>
+				<button class="btn btn-secondary fs-4">Ver trailer</button>
 			</div>
 		</div>
 	</div>`;
 		movies.innerHTML += cardMovie;
+	});
+};
+
+const showTrendingMovies = (data) => {
+	data.forEach((movie) => {
+		const { title, poster_path, vote_average, overview, release_date } = movie;
+		const cardMovie = `<div class="swiper-slide movie">
+		<img src="${
+			poster_path
+				? img_url + poster_path
+				: "https://picsum.photos/id/237/1000/1000"
+		}" alt="${title}" />
+		<div class="image-overlay">
+			<div class="overview">
+				<h3>${title}</h3>
+				<span class="info-movie">Genero</span>
+				<span class="info-movie ${getColor(vote_average)}"
+					><i class="fas fa-star"></i> ${
+						vote_average !== 0 ? vote_average : "No hay datos"
+					}</span
+				>
+				<span class="info-movie"
+					><i class="far fa-calendar-alt"></i> ${release_date}</span
+				>
+				<p>
+				${overview !== "" ? overview : "No hay información "}
+				</p>
+				<button class="btn btn-secondary fs-4">Ver trailer</button>
+			</div>
+		</div>
+	</div>`;
+		trendingMovies.innerHTML += cardMovie;
 	});
 };
 
@@ -189,7 +246,7 @@ form.addEventListener("submit", (e) => {
 		movies.innerHTML = "";
 	} else {
 		movies.innerHTML = "";
-		getMovies(API_URL);
+		getMovies(final_url);
 	}
 });
 
@@ -219,7 +276,9 @@ const setGenre = () => {
 			}
 			console.log(selectedGenre);
 			movies.innerHTML = "";
-			getMovies(API_URL + "&with_genres=" + encodeURI(selectedGenre.join(",")));
+			getMovies(
+				final_url + "&with_genres=" + encodeURI(selectedGenre.join(","))
+			);
 			highlightSelection();
 		});
 		tags.append(genreLi);
@@ -254,7 +313,7 @@ const clearBtn = () => {
 			selectedGenre = [];
 			setGenre();
 			movies.innerHTML = "";
-			getMovies(API_URL);
+			getMovies(final_url);
 		});
 		tags.append(clear);
 	}
@@ -293,17 +352,18 @@ next.addEventListener("click", () => {
 });
 
 // Painting default results
-getMovies(API_URL);
+getMovies(final_url);
+getTrendingMovies(request.fetchTrending);
 
 // SWIPER
-let swiperPopular = new Swiper(".swiper-container-popular", {
+let swiperTrending = new Swiper(".swiper-container-trending", {
 	slidesPerGroup: 1,
 	loop: true,
 	autoplay: {
 		delay: 3000,
 	},
 	speed: 1000,
-	centeredSlides: true,
+	centeredSlides: false,
 	grabCursor: true,
 	navigation: {
 		nextEl: ".swiper-button-next",
