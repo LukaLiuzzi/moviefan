@@ -133,6 +133,7 @@ const getMovies = (url) => {
 		.then((data) => {
 			if (data.results.length !== 0) {
 				showMovies(data.results);
+				console.log(data.results);
 				currentPage = data.page;
 				nextPage = currentPage + 1;
 				prevPage = currentPage - 1;
@@ -178,7 +179,14 @@ document.getElementById("copy").textContent =
 // Default movies
 const showMovies = (data) => {
 	data.forEach((movie) => {
-		const { title, poster_path, vote_average, overview, release_date } = movie;
+		const {
+			title,
+			poster_path,
+			vote_average,
+			overview,
+			release_date,
+			genre_ids,
+		} = movie;
 		const cardMovie = `<div class="movie">
 		<img src="${
 			poster_path
@@ -188,7 +196,7 @@ const showMovies = (data) => {
 		<div class="image-overlay">
 			<div class="overview">
 				<h3>${title}</h3>
-				<span class="info-movie">Genero</span>
+				<span class="info-movie fs-5">${findGenre(genre_ids)}</span>
 				<span class="info-movie ${getColor(
 					vote_average
 				)}"><i class="fas fa-star"></i> ${
@@ -211,7 +219,14 @@ const showMovies = (data) => {
 // Trending movies
 const showTrendingMovies = (data) => {
 	data.forEach((movie) => {
-		const { title, poster_path, vote_average, overview, release_date } = movie;
+		const {
+			title,
+			poster_path,
+			vote_average,
+			overview,
+			release_date,
+			genre_ids,
+		} = movie;
 		const cardMovie = `<div class="swiper-slide movie">
 		<img src="${
 			poster_path
@@ -221,7 +236,7 @@ const showTrendingMovies = (data) => {
 		<div class="image-overlay">
 			<div class="overview">
 				<h3>${title}</h3>
-				<span class="info-movie">Genero</span>
+				<span class="info-movie fs-5">${findGenre(genre_ids)}</span>
 				<span class="info-movie ${getColor(vote_average)}"
 					><i class="fas fa-star"></i> ${
 						vote_average !== 0 ? vote_average : "No hay datos"
@@ -244,7 +259,14 @@ const showTrendingMovies = (data) => {
 // Top Rated movies
 const showTopRatedMovies = (data) => {
 	data.forEach((movie) => {
-		const { title, poster_path, vote_average, overview, release_date } = movie;
+		const {
+			title,
+			poster_path,
+			vote_average,
+			overview,
+			release_date,
+			genre_ids,
+		} = movie;
 		const cardMovie = `<div class="swiper-slide movie">
 		<img src="${
 			poster_path
@@ -254,7 +276,7 @@ const showTopRatedMovies = (data) => {
 		<div class="image-overlay">
 			<div class="overview">
 				<h3>${title}</h3>
-				<span class="info-movie">Genero</span>
+				<span class="info-movie fs-5">${findGenre(genre_ids)}</span>
 				<span class="info-movie ${getColor(vote_average)}"
 					><i class="fas fa-star"></i> ${
 						vote_average !== 0 ? vote_average : "No hay datos"
@@ -368,6 +390,15 @@ const clearBtn = () => {
 		});
 		tags.append(clear);
 	}
+};
+
+// Find genre
+const findGenre = (Ids) => {
+	const genresMoviesNames = genres
+		.filter((gen) => Ids.includes(gen.id))
+		.map((el) => el.name);
+
+	return genresMoviesNames.join(", ");
 };
 
 // Pagination
