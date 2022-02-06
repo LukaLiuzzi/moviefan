@@ -23,8 +23,8 @@
 		font-size: 3rem;
 	}
 
-	.latest-movies-slider {
-		.swiper-container-latest {
+	.top-rated-movies-slider {
+		.swiper-container-top-rated {
 			img {
 				height: 35rem;
 			}
@@ -54,7 +54,7 @@
 	}
 
 	.trending-movies-slider,
-	.latest-movies-slider {
+	.top-rated-movies-slider {
 		.swiper-slide {
 			transition: 250ms all;
 

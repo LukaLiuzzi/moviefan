@@ -9,11 +9,11 @@ const final_url =
 	base_url +
 	"/discover/movie?" +
 	api_key +
-	"&primary_release_date.gte=2021-01-31&primary_release_date.lte=2022-01-31&language=es";
+	"&language=es&sort_by=popularity.desc";
 
 const img_url = "https://image.tmdb.org/t/p/w500";
 
-const SEARCH_URL = base_url + "search/movie?" + api_key;
+const search_url = base_url + "/search/movie?" + api_key;
 
 const genres = [
 	{
@@ -97,19 +97,24 @@ const genres = [
 const request = {
 	fetchPopular: `${base_url}/discover/movie?${api_key}&language=es&sort_by=popularity.desc`,
 	fetchTrending: `${base_url}/trending/movie/day?${api_key}&language=es`,
+	fetchTopRated: `${base_url}/discover/movie?${api_key}&language=es&sort_by=vote_average.desc&vote_count.gte=5000&page=${Math.ceil(
+		Math.random() * 10
+	)}`,
 };
 
 // DOM variables
 const movies = document.getElementById("movies");
 const trendingMovies = document.getElementById("trending-movies");
-const latestMovies = document.getElementById("latest-movies");
+const topRatedMovies = document.getElementById("top-rated-movies");
 const search = document.getElementById("search");
 const form = document.getElementById("form");
 const tags = document.getElementById("tags");
 const prev = document.getElementById("prev");
 const current = document.getElementById("current");
 const next = document.getElementById("next");
+const year = new Date();
 
+// Pagination variables
 let currentPage = 1;
 let nextPage = 2;
 let prevPage = 3;
@@ -126,7 +131,6 @@ const getMovies = (url) => {
 	fetch(url)
 		.then((res) => res.json())
 		.then((data) => {
-			console.log(data.results);
 			if (data.results.length !== 0) {
 				showMovies(data.results);
 				currentPage = data.page;
@@ -150,14 +154,28 @@ const getTrendingMovies = (url) => {
 	fetch(url)
 		.then((res) => res.json())
 		.then((data) => {
-			console.log(data.results);
 			if (data.results.length !== 0) {
 				showTrendingMovies(data.results);
 			}
 		});
 };
 
+// Top Rated movies
+const getTopRatedMovies = (url) => {
+	fetch(url)
+		.then((res) => res.json())
+		.then((data) => {
+			if (data.results.length !== 0) {
+				showTopRatedMovies(data.results);
+			}
+		});
+};
+
 // Showing data in DOM
+document.getElementById("copy").textContent =
+	"All rights reserved - " + year.getFullYear();
+
+// Default movies
 const showMovies = (data) => {
 	data.forEach((movie) => {
 		const { title, poster_path, vote_average, overview, release_date } = movie;
@@ -190,6 +208,7 @@ const showMovies = (data) => {
 	});
 };
 
+// Trending movies
 const showTrendingMovies = (data) => {
 	data.forEach((movie) => {
 		const { title, poster_path, vote_average, overview, release_date } = movie;
@@ -222,6 +241,39 @@ const showTrendingMovies = (data) => {
 	});
 };
 
+// Top Rated movies
+const showTopRatedMovies = (data) => {
+	data.forEach((movie) => {
+		const { title, poster_path, vote_average, overview, release_date } = movie;
+		const cardMovie = `<div class="swiper-slide movie">
+		<img src="${
+			poster_path
+				? img_url + poster_path
+				: "https://picsum.photos/id/237/1000/1000"
+		}" alt="${title}" />
+		<div class="image-overlay">
+			<div class="overview">
+				<h3>${title}</h3>
+				<span class="info-movie">Genero</span>
+				<span class="info-movie ${getColor(vote_average)}"
+					><i class="fas fa-star"></i> ${
+						vote_average !== 0 ? vote_average : "No hay datos"
+					}</span
+				>
+				<span class="info-movie"
+					><i class="far fa-calendar-alt"></i> ${release_date}</span
+				>
+				<p>
+				${overview !== "" ? overview : "No hay información "}
+				</p>
+				<button class="btn btn-secondary fs-4">Ver trailer</button>
+			</div>
+		</div>
+	</div>`;
+		topRatedMovies.innerHTML += cardMovie;
+	});
+};
+
 // Painting color according to result
 const getColor = (vote) => {
 	if (vote >= 7.5) {
@@ -242,8 +294,8 @@ form.addEventListener("submit", (e) => {
 	setGenre();
 
 	if (searchTerm) {
-		getMovies(SEARCH_URL + "&language=es&query=" + searchTerm);
 		movies.innerHTML = "";
+		getMovies(search_url + "&language=es&query=" + searchTerm);
 	} else {
 		movies.innerHTML = "";
 		getMovies(final_url);
@@ -274,7 +326,6 @@ const setGenre = () => {
 					selectedGenre.push(genre.id);
 				}
 			}
-			console.log(selectedGenre);
 			movies.innerHTML = "";
 			getMovies(
 				final_url + "&with_genres=" + encodeURI(selectedGenre.join(","))
@@ -354,6 +405,7 @@ next.addEventListener("click", () => {
 // Painting default results
 getMovies(final_url);
 getTrendingMovies(request.fetchTrending);
+getTopRatedMovies(request.fetchTopRated);
 
 // SWIPER
 let swiperTrending = new Swiper(".swiper-container-trending", {
@@ -385,14 +437,14 @@ let swiperTrending = new Swiper(".swiper-container-trending", {
 	},
 });
 
-let swiperLatest = new Swiper(".swiper-container-latest", {
+let swiperTopRated = new Swiper(".swiper-container-top-rated", {
 	slidesPerGroup: 1,
 	loop: true,
 	autoplay: {
 		delay: 5000,
 	},
 	speed: 1000,
-	centeredSlides: true,
+	centeredSlides: false,
 	grabCursor: true,
 	navigation: {
 		nextEl: ".swiper-button-next",
