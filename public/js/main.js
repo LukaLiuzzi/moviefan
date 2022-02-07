@@ -112,6 +112,9 @@ const tags = document.getElementById("tags");
 const prev = document.getElementById("prev");
 const current = document.getElementById("current");
 const next = document.getElementById("next");
+const overlayTrailerContent = document.getElementById(
+	"overlay-trailer-content"
+);
 const year = new Date();
 
 // Pagination variables
@@ -120,6 +123,9 @@ let nextPage = 2;
 let prevPage = 3;
 let lastUrl = "";
 let totalPages = 100;
+
+// Trailers variables
+let activeSlide = 0;
 
 // Functions
 
@@ -133,7 +139,6 @@ const getMovies = (url) => {
 		.then((data) => {
 			if (data.results.length !== 0) {
 				showMovies(data.results);
-				console.log(data.results);
 				currentPage = data.page;
 				nextPage = currentPage + 1;
 				prevPage = currentPage - 1;
@@ -145,7 +150,9 @@ const getMovies = (url) => {
 				// 	.querySelector(".movies-container")
 				// 	.scrollIntoView({ behavior: "smooth" });
 			} else {
-				movies.innerHTML = `<h2 class="text-center">No se encontraron peliculas </h2>`;
+				document.querySelector(
+					".movies-container"
+				).innerHTML = `<h3 class="text-white text-center my-5">No se encontraron peliculas </h3>`;
 			}
 		});
 };
@@ -186,8 +193,12 @@ const showMovies = (data) => {
 			overview,
 			release_date,
 			genre_ids,
+			id,
 		} = movie;
-		const cardMovie = `<div class="movie">
+
+		const cardMovie = document.createElement("div");
+
+		cardMovie.innerHTML = `<div class="movie">
 		<img src="${
 			poster_path
 				? img_url + poster_path
@@ -208,11 +219,16 @@ const showMovies = (data) => {
 				<p>
 				${overview !== "" ? overview : "No hay información "}
 				</p>
-				<button class="btn btn-secondary fs-4">Ver trailer</button>
+				<button id="${id}" class="btn btn-secondary fs-4">Ver trailer</button>
 			</div>
 		</div>
 	</div>`;
-		movies.innerHTML += cardMovie;
+		movies.appendChild(cardMovie);
+
+		document.getElementById(id).addEventListener("click", () => {
+			console.log(id);
+			showTrailers(movie);
+		});
 	});
 };
 
@@ -226,9 +242,13 @@ const showTrendingMovies = (data) => {
 			overview,
 			release_date,
 			genre_ids,
+			id,
 		} = movie;
-		const cardMovie = `<div class="swiper-slide movie">
-		<img src="${
+
+		const cardMovie = document.createElement("div");
+		cardMovie.classList.add("swiper-slide", "movie");
+
+		cardMovie.innerHTML = `<img src="${
 			poster_path
 				? img_url + poster_path
 				: "https://picsum.photos/id/237/1000/1000"
@@ -248,11 +268,10 @@ const showTrendingMovies = (data) => {
 				<p>
 				${overview !== "" ? overview : "No hay información "}
 				</p>
-				<button class="btn btn-secondary fs-4">Ver trailer</button>
+				<button class="btn btn-secondary fs-4" id="${id}">Ver trailer</button>
 			</div>
-		</div>
-	</div>`;
-		trendingMovies.innerHTML += cardMovie;
+		</div>`;
+		trendingMovies.appendChild(cardMovie);
 	});
 };
 
@@ -266,9 +285,13 @@ const showTopRatedMovies = (data) => {
 			overview,
 			release_date,
 			genre_ids,
+			id,
 		} = movie;
-		const cardMovie = `<div class="swiper-slide movie">
-		<img src="${
+
+		const cardMovie = document.createElement("div");
+		cardMovie.classList.add("swiper-slide", "movie");
+
+		cardMovie.innerHTML = `<img src="${
 			poster_path
 				? img_url + poster_path
 				: "https://picsum.photos/id/237/1000/1000"
@@ -288,11 +311,66 @@ const showTopRatedMovies = (data) => {
 				<p>
 				${overview !== "" ? overview : "No hay información "}
 				</p>
-				<button class="btn btn-secondary fs-4">Ver trailer</button>
+				<button class="btn btn-secondary fs-4" id="${id}">Ver trailer</button>
 			</div>
-		</div>
-	</div>`;
-		topRatedMovies.innerHTML += cardMovie;
+		</div>`;
+		topRatedMovies.appendChild(cardMovie);
+	});
+};
+
+// Trailers
+const showTrailers = (movie) => {
+	fetch(base_url + "/movie/" + movie.id + "/videos?" + api_key + "&language=es")
+		.then((res) => res.json())
+		.then((videoData) => {
+			if (videoData) {
+				console.log(videoData);
+
+				if (videoData.results.length > 0) {
+					document.getElementById("overlay-trailers").style.width = "100%";
+					let embed = [];
+
+					videoData.results.forEach((video) => {
+						const { name, key, site } = video;
+
+						if (site === "YouTube") {
+							embed.push(`
+							<iframe width="560" height="315" src="https://www.youtube.com/embed/${key}" class="embed hide" title="${name}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`);
+						}
+					});
+
+					overlayTrailerContent.innerHTML = embed.join("");
+					showVideos();
+				} else {
+					overlayTrailerContent.innerHTML = `
+					<div class="alert alert-danger d-flex justify-content-center align-items-center no-trailers" role="alert">
+					<div>
+					<i class="fas fa-exclamation-triangle"></i> <span class="text-black fw-bold">Esta pelicula no tiene trailer!</span>
+					</div>
+					`;
+
+					setTimeout(() => {
+						overlayTrailerContent.innerHTML = "";
+					}, 2000);
+				}
+			}
+		});
+};
+
+const closeOverlayTrailers = () => {
+	document.getElementById("overlay-trailers").style.width = "0%";
+};
+
+const showVideos = () => {
+	const embedClasses = document.querySelectorAll(".embed");
+	embedClasses.forEach((embedTag, idx) => {
+		if (activeSlide === idx) {
+			embedTag.classList.add("show");
+			embedTag.classList.remove("hide");
+		} else {
+			embed.classList.add("hide");
+			embed.classList.remove("show");
+		}
 	});
 };
 
