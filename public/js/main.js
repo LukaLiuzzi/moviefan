@@ -115,6 +115,8 @@ const next = document.getElementById("next");
 const overlayTrailerContent = document.getElementById(
 	"overlay-trailer-content"
 );
+const prevTrailerArrow = document.getElementById("left-arrow");
+const nextTrailerArrow = document.getElementById("right-arrow");
 const year = new Date();
 
 // Pagination variables
@@ -126,6 +128,7 @@ let totalPages = 100;
 
 // Trailers variables
 let activeSlide = 0;
+let totalVideos = 0;
 
 // Functions
 
@@ -226,7 +229,6 @@ const showMovies = (data) => {
 		movies.appendChild(cardMovie);
 
 		document.getElementById(id).addEventListener("click", () => {
-			console.log(id);
 			showTrailers(movie);
 		});
 	});
@@ -272,6 +274,10 @@ const showTrendingMovies = (data) => {
 			</div>
 		</div>`;
 		trendingMovies.appendChild(cardMovie);
+
+		document.getElementById(id).addEventListener("click", () => {
+			showTrailers(movie);
+		});
 	});
 };
 
@@ -315,6 +321,10 @@ const showTopRatedMovies = (data) => {
 			</div>
 		</div>`;
 		topRatedMovies.appendChild(cardMovie);
+
+		document.getElementById(id).addEventListener("click", () => {
+			showTrailers(movie);
+		});
 	});
 };
 
@@ -329,17 +339,32 @@ const showTrailers = (movie) => {
 				if (videoData.results.length > 0) {
 					document.getElementById("overlay-trailers").style.width = "100%";
 					let embed = [];
+					let dots = [];
 
-					videoData.results.forEach((video) => {
+					videoData.results.forEach((video, idx) => {
 						const { name, key, site } = video;
 
 						if (site === "YouTube") {
 							embed.push(`
-							<iframe width="560" height="315" src="https://www.youtube.com/embed/${key}" class="embed hide" title="${name}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`);
+							<iframe src="https://www.youtube.com/embed/${key}" class="embed hide" title="${name}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`);
+
+							dots.push(`
+							<span class="dot"> ${idx + 1}</span>`);
 						}
 					});
 
-					overlayTrailerContent.innerHTML = embed.join("");
+					let content = `
+					<h2 class="text-white text-center">${movie.original_title}</h2>
+					<br/>
+
+					${embed.join("")};
+					<br/>
+
+					<div class="dots"> ${dots.join("")}</div>
+
+					`;
+
+					overlayTrailerContent.innerHTML = content;
 					showVideos();
 				} else {
 					overlayTrailerContent.innerHTML = `
@@ -355,6 +380,10 @@ const showTrailers = (movie) => {
 				}
 			}
 		});
+
+	window.onscroll = () => {
+		closeOverlayTrailers();
+	};
 };
 
 const closeOverlayTrailers = () => {
@@ -363,16 +392,46 @@ const closeOverlayTrailers = () => {
 
 const showVideos = () => {
 	const embedClasses = document.querySelectorAll(".embed");
+	const dots = document.querySelectorAll(".dot");
+	totalVideos = embedClasses.length;
 	embedClasses.forEach((embedTag, idx) => {
 		if (activeSlide === idx) {
 			embedTag.classList.add("show");
 			embedTag.classList.remove("hide");
 		} else {
-			embed.classList.add("hide");
-			embed.classList.remove("show");
+			embedTag.classList.add("hide");
+			embedTag.classList.remove("show");
+		}
+	});
+
+	dots.forEach((dot, index) => {
+		if (activeSlide === index) {
+			dot.classList.add("active");
+		} else {
+			dot.classList.remove("active");
 		}
 	});
 };
+
+prevTrailerArrow.addEventListener("click", () => {
+	if (activeSlide > 0) {
+		activeSlide--;
+	} else {
+		activeSlide = totalVideos - 1;
+	}
+
+	showVideos();
+});
+
+nextTrailerArrow.addEventListener("click", () => {
+	if (activeSlide < totalVideos - 1) {
+		activeSlide++;
+	} else {
+		activeSlide = 0;
+	}
+
+	showVideos();
+});
 
 // Painting color according to result
 const getColor = (vote) => {
