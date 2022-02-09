@@ -117,6 +117,7 @@ const overlayTrailerContent = document.getElementById(
 );
 const prevTrailerArrow = document.getElementById("left-arrow");
 const nextTrailerArrow = document.getElementById("right-arrow");
+const moviesTitle = document.getElementById("movies-title");
 const year = new Date();
 
 // Pagination variables
@@ -131,6 +132,13 @@ let activeSlide = 0;
 let totalVideos = 0;
 
 // Functions
+
+// Scroll
+const scrollToMovies = () => {
+	setTimeout(() => {
+		moviesTitle.scrollIntoView({ block: "start", behavior: "smooth" });
+	}, 300);
+};
 
 // Fetching API
 
@@ -459,6 +467,7 @@ form.addEventListener("submit", (e) => {
 		movies.innerHTML = "";
 		getMovies(final_url);
 	}
+	scrollToMovies();
 });
 
 // Filter by Genres
@@ -490,6 +499,7 @@ const setGenre = () => {
 				final_url + "&with_genres=" + encodeURI(selectedGenre.join(","))
 			);
 			highlightSelection();
+			scrollToMovies();
 		});
 		tags.append(genreLi);
 	});
@@ -524,6 +534,7 @@ const clearBtn = () => {
 			setGenre();
 			movies.innerHTML = "";
 			getMovies(final_url);
+			scrollToMovies();
 		});
 		tags.append(clear);
 	}
@@ -562,12 +573,14 @@ prev.addEventListener("click", () => {
 	if (prevPage > 0) {
 		pageCall(prevPage);
 	}
+	scrollToMovies();
 });
 
 next.addEventListener("click", () => {
 	if (nextPage <= totalPages) {
 		pageCall(nextPage);
 	}
+	scrollToMovies();
 });
 
 // Painting default results
