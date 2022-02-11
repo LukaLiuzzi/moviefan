@@ -342,8 +342,6 @@ const showTrailers = (movie) => {
 		.then((res) => res.json())
 		.then((videoData) => {
 			if (videoData) {
-				console.log(videoData);
-
 				if (videoData.results.length > 0) {
 					document.getElementById("overlay-trailers").style.width = "100%";
 					let embed = [];
@@ -388,14 +386,6 @@ const showTrailers = (movie) => {
 				}
 			}
 		});
-
-	window.onscroll = () => {
-		closeOverlayTrailers();
-	};
-};
-
-const closeOverlayTrailers = () => {
-	document.getElementById("overlay-trailers").style.width = "0%";
 };
 
 const showVideos = () => {
@@ -419,9 +409,12 @@ const showVideos = () => {
 			dot.classList.remove("active");
 		}
 	});
+
+	document.querySelector("html").classList.add("stop-scrolling");
 };
 
 prevTrailerArrow.addEventListener("click", () => {
+	stopVideos();
 	if (activeSlide > 0) {
 		activeSlide--;
 	} else {
@@ -432,6 +425,7 @@ prevTrailerArrow.addEventListener("click", () => {
 });
 
 nextTrailerArrow.addEventListener("click", () => {
+	stopVideos();
 	if (activeSlide < totalVideos - 1) {
 		activeSlide++;
 	} else {
@@ -441,6 +435,23 @@ nextTrailerArrow.addEventListener("click", () => {
 	showVideos();
 });
 
+let stopVideos = () => {
+	let videos = document.querySelectorAll("iframe, video");
+	Array.prototype.forEach.call(videos, (video) => {
+		if (video.tagName.toLowerCase() === "video") {
+			video.pause();
+		} else {
+			var src = video.src;
+			video.src = src;
+		}
+	});
+};
+
+const closeOverlayTrailers = () => {
+	document.getElementById("overlay-trailers").style.width = "0%";
+	stopVideos();
+	document.querySelector("html").classList.remove("stop-scrolling");
+};
 // Painting color according to result
 const getColor = (vote) => {
 	if (vote >= 7.5) {
@@ -587,6 +598,9 @@ next.addEventListener("click", () => {
 getMovies(final_url);
 getTrendingMovies(request.fetchTrending);
 getTopRatedMovies(request.fetchTopRated);
+document.getElementById("close-trailers-btn").onclick = () => {
+	closeOverlayTrailers();
+};
 
 // SWIPER
 let swiperTrending = new Swiper(".swiper-container-trending", {
@@ -596,7 +610,6 @@ let swiperTrending = new Swiper(".swiper-container-trending", {
 		delay: 3000,
 	},
 	speed: 1000,
-	centeredSlides: false,
 	grabCursor: true,
 	navigation: {
 		nextEl: ".swiper-button-next",
@@ -625,7 +638,6 @@ let swiperTopRated = new Swiper(".swiper-container-top-rated", {
 		delay: 5000,
 	},
 	speed: 1000,
-	centeredSlides: false,
 	grabCursor: true,
 	navigation: {
 		nextEl: ".swiper-button-next",
