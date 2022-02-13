@@ -192,7 +192,7 @@ const getTopRatedMovies = (url) => {
 
 // Showing data in DOM
 document.getElementById("copy").textContent =
-	"All rights reserved - " + year.getFullYear();
+	"All rights reserved • " + year.getFullYear();
 
 // Default movies
 const showMovies = (data) => {

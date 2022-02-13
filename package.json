@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build-bootstrap": "sass src/sass/bootstrap/bootstrap.scss public/css/bootstrap.css --style=compressed",
+    "build-bootstrap": "sass sass/bootstrap/bootstrap.scss css/bootstrap.css --style=compressed",
     "watch-bootstrap": "nodemon -e scss -x \"npm run build-bootstrap\"",
-    "build-main": "sass src/sass/main.scss public/css/main.css --style=compressed",
+    "build-main": "sass sass/main.scss css/main.css --style=compressed",
     "watch-main": "nodemon -e scss -x \"npm run build-main\""
   },
   "keywords": [],
