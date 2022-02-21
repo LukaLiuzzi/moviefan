@@ -700,7 +700,10 @@ let swiperTopRated = new Swiper(".swiper-container-top-rated", {
 
 /* =========================================------================================== */
 
-const seeLaterMovies = [];
+let seeLaterMovies = [];
+const localSeeLaterMovies =
+	JSON.parse(localStorage.getItem("SeeLaterMovies")) || [];
+seeLaterMovies = localSeeLaterMovies;
 
 const addSeeLaterMovies = (id) => {
 	fetch(base_url + "/movie/" + id + "?" + api_key + "&language=es")
@@ -766,11 +769,7 @@ const showSeeLaterMovies = () => {
 		};
 	}
 
-	const localSeeLaterMovies = JSON.parse(
-		localStorage.getItem("SeeLaterMovies")
-	);
-
-	localSeeLaterMovies.forEach((movie) => {
+	seeLaterMovies.forEach((movie) => {
 		const {
 			title,
 			poster_path,
