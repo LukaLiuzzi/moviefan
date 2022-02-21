@@ -231,8 +231,7 @@ const showMovies = (data) => {
 				${overview !== "" ? overview : "No hay información "}
 				</p>
 				<button id="${id}" class="btn btn-secondary fs-4">Ver trailer</button>
-				<button id="see-later-${id}" class="btn btn-warning fs-4 add">+</button>
-				<button id="see-later-${id}" class="btn btn-danger fs-4 remove d-none">-</button>
+				<button id="see-later-${id}" class="btn btn-warning fs-4">+</button>
 			</div>
 		</div>
 	</div>`;
@@ -243,7 +242,15 @@ const showMovies = (data) => {
 		});
 
 		document.getElementById(`see-later-${id}`).addEventListener("click", () => {
-			addSeeLaterMovies(id);
+			if (
+				!document.getElementById(`see-later-${id}`).classList.contains("added")
+			) {
+				addSeeLaterMovies(id);
+				changeStateSeeLaterMoviesBtn(id);
+			} else {
+				removeSeeLaterMovies(id);
+				changeStateSeeLaterMoviesBtn(id);
+			}
 		});
 	});
 };
@@ -285,12 +292,25 @@ const showTrendingMovies = (data) => {
 				${overview !== "" ? overview : "No hay información "}
 				</p>
 				<button class="btn btn-secondary fs-4" id="${id}">Ver trailer</button>
+				<button id="see-later-${id}" class="btn btn-warning fs-4">+</button>
 			</div>
 		</div>`;
 		trendingMovies.appendChild(cardMovie);
 
 		document.getElementById(id).addEventListener("click", () => {
 			showTrailers(movie);
+		});
+
+		document.getElementById(`see-later-${id}`).addEventListener("click", () => {
+			if (
+				!document.getElementById(`see-later-${id}`).classList.contains("added")
+			) {
+				addSeeLaterMovies(id);
+				changeStateSeeLaterMoviesBtn(id);
+			} else {
+				removeSeeLaterMovies(id);
+				changeStateSeeLaterMoviesBtn(id);
+			}
 		});
 	});
 };
@@ -332,12 +352,25 @@ const showTopRatedMovies = (data) => {
 				${overview !== "" ? overview : "No hay información "}
 				</p>
 				<button class="btn btn-secondary fs-4" id="${id}">Ver trailer</button>
+				<button id="see-later-${id}" class="btn btn-warning fs-4">+</button>
 			</div>
 		</div>`;
 		topRatedMovies.appendChild(cardMovie);
 
 		document.getElementById(id).addEventListener("click", () => {
 			showTrailers(movie);
+		});
+
+		document.getElementById(`see-later-${id}`).addEventListener("click", () => {
+			if (
+				!document.getElementById(`see-later-${id}`).classList.contains("added")
+			) {
+				addSeeLaterMovies(id);
+				changeStateSeeLaterMoviesBtn(id);
+			} else {
+				removeSeeLaterMovies(id);
+				changeStateSeeLaterMoviesBtn(id);
+			}
 		});
 	});
 };
@@ -677,6 +710,7 @@ const addSeeLaterMovies = (id) => {
 
 			if (!result) {
 				seeLaterMovies.push(data);
+				localStorage.setItem("SeeLaterMovies", JSON.stringify(seeLaterMovies));
 			}
 		});
 };
@@ -686,6 +720,32 @@ const seeLaterBtn = document.getElementById("see-later");
 seeLaterBtn.addEventListener("click", () => {
 	showSeeLaterMovies();
 });
+
+const changeStateSeeLaterMoviesBtn = (id) => {
+	const result = seeLaterMovies.find((movie) => movie.id === id);
+
+	if (result) {
+		document.getElementById(`see-later-${id}`).classList.remove("btn-warning");
+		document.getElementById(`see-later-${id}`).textContent = "-";
+		document.getElementById(`see-later-${id}`).classList.add("btn-danger");
+		document.getElementById(`see-later-${id}`).classList.add("added");
+	} else {
+		document.getElementById(`see-later-${id}`).classList.remove("btn-danger");
+		document.getElementById(`see-later-${id}`).textContent = "+";
+		document.getElementById(`see-later-${id}`).classList.add("btn-warning");
+		document.getElementById(`see-later-${id}`).classList.remove("added");
+	}
+};
+
+const removeSeeLaterMovies = (id) => {
+	const result = seeLaterMovies.find((movie) => movie.id === id);
+
+	const index = seeLaterMovies.indexOf(result);
+
+	seeLaterMovies.splice(index, 1);
+
+	localStorage.setItem("SeeLaterMovies", JSON.stringify(seeLaterMovies));
+};
 
 const showSeeLaterMovies = () => {
 	movies.innerHTML = "";
@@ -706,7 +766,11 @@ const showSeeLaterMovies = () => {
 		};
 	}
 
-	seeLaterMovies.forEach((movie) => {
+	const localSeeLaterMovies = JSON.parse(
+		localStorage.getItem("SeeLaterMovies")
+	);
+
+	localSeeLaterMovies.forEach((movie) => {
 		const {
 			title,
 			poster_path,
@@ -743,8 +807,7 @@ const showSeeLaterMovies = () => {
 				${overview !== "" ? overview : "No hay información "}
 				</p>
 				<button id="${id}" class="btn btn-secondary fs-4">Ver trailer</button>
-				<button id="see-later-${id}" class="btn btn-warning fs-4 add">+</button>
-				<button id="see-later-${id}" class="btn btn-danger fs-4 remove d-none">-</button>
+				<button id="see-later-${id}" class="btn btn-warning fs-4">+</button>
 			</div>
 		</div>
 	</div>`;
@@ -752,6 +815,20 @@ const showSeeLaterMovies = () => {
 
 		document.getElementById(id).addEventListener("click", () => {
 			showTrailers(movie);
+		});
+
+		changeStateSeeLaterMoviesBtn(id);
+
+		document.getElementById(`see-later-${id}`).addEventListener("click", () => {
+			if (
+				!document.getElementById(`see-later-${id}`).classList.contains("added")
+			) {
+				addSeeLaterMovies(id);
+				changeStateSeeLaterMoviesBtn(id);
+			} else {
+				removeSeeLaterMovies(id);
+				changeStateSeeLaterMoviesBtn(id);
+			}
 		});
 	});
 };
