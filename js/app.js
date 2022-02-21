@@ -231,6 +231,8 @@ const showMovies = (data) => {
 				${overview !== "" ? overview : "No hay información "}
 				</p>
 				<button id="${id}" class="btn btn-secondary fs-4">Ver trailer</button>
+				<button id="see-later-${id}" class="btn btn-warning fs-4 add">+</button>
+				<button id="see-later-${id}" class="btn btn-danger fs-4 remove d-none">-</button>
 			</div>
 		</div>
 	</div>`;
@@ -238,6 +240,10 @@ const showMovies = (data) => {
 
 		document.getElementById(id).addEventListener("click", () => {
 			showTrailers(movie);
+		});
+
+		document.getElementById(`see-later-${id}`).addEventListener("click", () => {
+			addSeeLaterMovies(id);
 		});
 	});
 };
@@ -658,3 +664,94 @@ let swiperTopRated = new Swiper(".swiper-container-top-rated", {
 		},
 	},
 });
+
+/* =========================================------================================== */
+
+const seeLaterMovies = [];
+
+const addSeeLaterMovies = (id) => {
+	fetch(base_url + "/movie/" + id + "?" + api_key + "&language=es")
+		.then((res) => res.json())
+		.then((data) => {
+			const result = seeLaterMovies.find((movie) => movie.id === data.id);
+
+			if (!result) {
+				seeLaterMovies.push(data);
+			}
+		});
+};
+
+const seeLaterBtn = document.getElementById("see-later");
+
+seeLaterBtn.addEventListener("click", () => {
+	showSeeLaterMovies();
+});
+
+const showSeeLaterMovies = () => {
+	movies.innerHTML = "";
+	moviesTitle.textContent = "Ver mas tarde";
+
+	if (document.querySelector(".pagination")) {
+		document.querySelector(".pagination").remove();
+	}
+
+	const existBackBtn = document.getElementById("back-btn");
+	if (!existBackBtn) {
+		const backBtn = document.createElement("div");
+		backBtn.id = "back-btn";
+		backBtn.innerHTML = `<button class="btn btn-success fs-2 my-5 d-block mx-auto">Volver</button>`;
+		document.querySelector(".movies-container").append(backBtn);
+		backBtn.onclick = () => {
+			window.location = "index.html";
+		};
+	}
+
+	seeLaterMovies.forEach((movie) => {
+		const {
+			title,
+			poster_path,
+			vote_average,
+			overview,
+			release_date,
+			genres,
+			id,
+		} = movie;
+
+		const cardMovie = document.createElement("div");
+
+		cardMovie.innerHTML = `<div class="movie">
+		<img src="${
+			poster_path
+				? img_url + poster_path
+				: "https://picsum.photos/id/237/1000/1000"
+		}" alt="${title}" />
+		<div class="image-overlay">
+			<div class="overview">
+				<h3>${title}</h3>
+				<span class="info-movie fs-5">${genres.map((genre) => {
+					return " " + genre.name;
+				})}</span>
+				<span class="info-movie ${getColor(
+					vote_average
+				)}"><i class="fas fa-star"></i> ${
+			vote_average !== 0 ? vote_average : "No hay datos"
+		}</span>
+				<span class="info-movie"
+					><i class="far fa-calendar-alt"></i> ${release_date}</span
+				>
+				<p>
+				${overview !== "" ? overview : "No hay información "}
+				</p>
+				<button id="${id}" class="btn btn-secondary fs-4">Ver trailer</button>
+				<button id="see-later-${id}" class="btn btn-warning fs-4 add">+</button>
+				<button id="see-later-${id}" class="btn btn-danger fs-4 remove d-none">-</button>
+			</div>
+		</div>
+	</div>`;
+		movies.appendChild(cardMovie);
+
+		document.getElementById(id).addEventListener("click", () => {
+			showTrailers(movie);
+		});
+	});
+};
