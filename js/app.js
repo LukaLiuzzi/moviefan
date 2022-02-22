@@ -230,14 +230,14 @@ const showMovies = (data) => {
 				<p>
 				${overview !== "" ? overview : "No hay información "}
 				</p>
-				<button id="${id}" class="btn btn-secondary fs-4">Ver trailer</button>
+				<button id="default-${id}" class="btn btn-secondary fs-4">Ver trailer</button>
 				<button id="see-later-${id}" class="btn btn-warning fs-4">+</button>
 			</div>
 		</div>
 	</div>`;
 		movies.appendChild(cardMovie);
 
-		document.getElementById(id).addEventListener("click", () => {
+		document.getElementById(`default-${id}`).addEventListener("click", () => {
 			showTrailers(movie);
 		});
 
@@ -291,13 +291,13 @@ const showTrendingMovies = (data) => {
 				<p>
 				${overview !== "" ? overview : "No hay información "}
 				</p>
-				<button class="btn btn-secondary fs-4" id="${id}">Ver trailer</button>
+				<button id="trending-${id}" class="btn btn-secondary fs-4">Ver trailer</button>
 				<button id="see-later-${id}" class="btn btn-warning fs-4">+</button>
 			</div>
 		</div>`;
 		trendingMovies.appendChild(cardMovie);
 
-		document.getElementById(id).addEventListener("click", () => {
+		document.getElementById(`trending-${id}`).addEventListener("click", () => {
 			showTrailers(movie);
 		});
 
@@ -351,13 +351,13 @@ const showTopRatedMovies = (data) => {
 				<p>
 				${overview !== "" ? overview : "No hay información "}
 				</p>
-				<button class="btn btn-secondary fs-4" id="${id}">Ver trailer</button>
+				<button id="top-rated-${id}" class="btn btn-secondary fs-4">Ver trailer</button>
 				<button id="see-later-${id}" class="btn btn-warning fs-4">+</button>
 			</div>
 		</div>`;
 		topRatedMovies.appendChild(cardMovie);
 
-		document.getElementById(id).addEventListener("click", () => {
+		document.getElementById(`top-rated-${id}`).addEventListener("click", () => {
 			showTrailers(movie);
 		});
 
