@@ -131,6 +131,12 @@ let totalPages = 100;
 let activeSlide = 0;
 let totalVideos = 0;
 
+// See Later variables
+let seeLaterMovies = [];
+const localSeeLaterMovies =
+	JSON.parse(localStorage.getItem("SeeLaterMovies")) || [];
+seeLaterMovies = localSeeLaterMovies;
+
 // Functions
 
 // Scroll
@@ -138,6 +144,137 @@ const scrollToMovies = () => {
 	setTimeout(() => {
 		moviesTitle.scrollIntoView({ block: "start", behavior: "smooth" });
 	}, 300);
+};
+
+const render = (movie, type) => {
+	const {
+		title,
+		poster_path,
+		vote_average,
+		overview,
+		release_date,
+		genre_ids,
+		id,
+	} = movie;
+
+	switch (type) {
+		case "default":
+			return `<div class="movie">
+			<img src="${
+				poster_path
+					? img_url + poster_path
+					: "https://picsum.photos/id/237/1000/1000"
+			}" alt="${title}" />
+			<div class="image-overlay">
+				<div class="overview">
+					<h3>${title}</h3>
+					<span class="info-movie fs-5">${findGenre(genre_ids)}</span>
+					<span class="info-movie ${getColor(
+						vote_average
+					)}"><i class="fas fa-star"></i> ${
+				vote_average !== 0 ? vote_average : "No hay datos"
+			}</span>
+					<span class="info-movie"
+						><i class="far fa-calendar-alt"></i> ${release_date}</span
+					>
+					<p>
+					${overview !== "" ? overview : "No hay información "}
+					</p>
+					<button id="${type}-${id}" class="btn btn-secondary fs-4">Ver trailer</button>
+					<button id="see-later-${type}-${id}" class="btn btn-warning fs-4">+</button>
+					<button id="remove-see-later-${type}-${id}" class="btn btn-danger fs-4">-</button>
+				</div>
+			</div>
+		</div>`;
+
+		case "trending":
+			return `<img src="${
+				poster_path
+					? img_url + poster_path
+					: "https://picsum.photos/id/237/1000/1000"
+			}" alt="${title}" />
+	<div class="image-overlay">
+		<div class="overview">
+			<h3>${title}</h3>
+			<span class="info-movie fs-5">${findGenre(genre_ids)}</span>
+			<span class="info-movie ${getColor(vote_average)}"
+				><i class="fas fa-star"></i> ${
+					vote_average !== 0 ? vote_average : "No hay datos"
+				}</span
+			>
+			<span class="info-movie"
+				><i class="far fa-calendar-alt"></i> ${release_date}</span
+			>
+			<p>
+			${overview !== "" ? overview : "No hay información "}
+			</p>
+			<button id="${type}-${id}" class="btn btn-secondary fs-4">Ver trailer</button>
+			<button id="see-later-${type}-${id}" class="btn btn-warning fs-4">+</button>
+			<button id="remove-see-later-${type}-${id}" class="btn btn-danger fs-4">-</button>
+		</div>
+	</div>`;
+
+		case "top-rated":
+			return `<img src="${
+				poster_path
+					? img_url + poster_path
+					: "https://picsum.photos/id/237/1000/1000"
+			}" alt="${title}" />
+	<div class="image-overlay">
+		<div class="overview">
+			<h3>${title}</h3>
+			<span class="info-movie fs-5">${findGenre(genre_ids)}</span>
+			<span class="info-movie ${getColor(vote_average)}"
+				><i class="fas fa-star"></i> ${
+					vote_average !== 0 ? vote_average : "No hay datos"
+				}</span
+			>
+			<span class="info-movie"
+				><i class="far fa-calendar-alt"></i> ${release_date}</span
+			>
+			<p>
+			${overview !== "" ? overview : "No hay información "}
+			</p>
+			<button id="${type}-${id}" class="btn btn-secondary fs-4">Ver trailer</button>
+			<button id="see-later-${type}-${id}" class="btn btn-warning fs-4">+</button>
+			<button id="remove-see-later-${type}-${id}" class="btn btn-danger fs-4">-</button>
+		</div>
+	</div>`;
+
+		case "see-later":
+			return `<div class="movie">
+			<img src="${
+				poster_path
+					? img_url + poster_path
+					: "https://picsum.photos/id/237/1000/1000"
+			}" alt="${title}" />
+			<div class="image-overlay">
+				<div class="overview">
+					<h3>${title}</h3>
+					<span class="info-movie fs-5">${genres.map((genre) => {
+						return " " + genre.name;
+					})}</span>
+					<span class="info-movie ${getColor(
+						vote_average
+					)}"><i class="fas fa-star"></i> ${
+				vote_average !== 0 ? vote_average : "No hay datos"
+			}</span>
+					<span class="info-movie"
+						><i class="far fa-calendar-alt"></i> ${release_date}</span
+					>
+					<p>
+					${overview !== "" ? overview : "No hay información "}
+					</p>
+					<button id="${type}-${id}" class="btn btn-secondary fs-4">Ver trailer</button>
+					<button id="see-later-${type}-${id}" class="btn btn-warning fs-4">+</button>
+					<button id="remove-see-later-${type}-${id}" class="btn btn-danger fs-4">-</button>
+				</div>
+			</div>
+		</div>`;
+
+		default:
+			console.warn("type not found");
+	}
 };
 
 // Fetching API
@@ -158,10 +295,6 @@ const getMovies = (url, type, container) => {
 					totalPages = data.total_pages;
 
 					current.textContent = currentPage;
-
-					document
-						.querySelector(".movies-container")
-						.scrollIntoView({ behavior: "smooth" });
 				}
 			} else {
 				document.querySelector(
@@ -213,20 +346,20 @@ const showMovies = (data, type, container) => {
 				showTrailers(movie);
 			});
 
+		changeSeeLaterBtn(movie.id, type);
+
 		document
 			.getElementById(`see-later-${type}-${movie.id}`)
 			.addEventListener("click", () => {
-				if (
-					!document
-						.getElementById(`see-later-${type}-${movie.id}`)
-						.classList.contains("added")
-				) {
-					addSeeLaterMovies(movie.id);
-					changeStateSeeLaterMoviesBtn(movie.id, type);
-				} else {
-					removeSeeLaterMovies(movie.id);
-					changeStateSeeLaterMoviesBtn(movie.id, type);
-				}
+				addSeeLaterMovies(movie.id);
+				changeSeeLaterBtn(movie.id, type);
+			});
+
+		document
+			.getElementById(`remove-see-later-${type}-${movie.id}`)
+			.addEventListener("click", () => {
+				removeSeeLaterMovies(movie.id);
+				changeSeeLaterBtn(movie.id, type);
 			});
 	});
 };
@@ -497,6 +630,55 @@ next.addEventListener("click", () => {
 	scrollToMovies();
 });
 
+// See Later
+
+const addSeeLaterMovies = (id) => {
+	fetch(base_url + "/movie/" + id + "?" + api_key + "&language=es")
+		.then((res) => res.json())
+		.then((data) => {
+			const result = seeLaterMovies.find((movie) => movie.id === data.id);
+
+			if (!result) {
+				seeLaterMovies.push(data);
+				localStorage.setItem("SeeLaterMovies", JSON.stringify(seeLaterMovies));
+			}
+		});
+};
+
+const seeLaterBtn = document.getElementById("see-later");
+
+seeLaterBtn.addEventListener("click", () => {
+	showMovies(seeLaterMovies, "see-later", movies);
+});
+
+const removeSeeLaterMovies = (id) => {
+	const result = seeLaterMovies.find((movie) => movie.id === id);
+
+	const index = seeLaterMovies.indexOf(result);
+
+	seeLaterMovies.splice(index, 1);
+
+	localStorage.setItem("SeeLaterMovies", JSON.stringify(seeLaterMovies));
+};
+
+const changeSeeLaterBtn = (id, type) => {
+	let result = seeLaterMovies.find((movie) => movie.id === id);
+
+	if (result) {
+		document.getElementById(`see-later-${type}-${id}`).classList.add("d-none");
+		document
+			.getElementById(`remove-see-later-${type}-${id}`)
+			.classList.remove("d-none");
+	} else {
+		document
+			.getElementById(`see-later-${type}-${id}`)
+			.classList.remove("d-none");
+		document
+			.getElementById(`remove-see-later-${type}-${id}`)
+			.classList.add("d-none");
+	}
+};
+
 // Painting default results
 getMovies(final_url, "default", movies);
 getMovies(request.fetchTrending, "trending", trendingMovies);
@@ -506,7 +688,7 @@ document.getElementById("close-trailers-btn").onclick = () => {
 };
 
 // SWIPER
-let swiperTrending = new Swiper(".swiper-container-trending", {
+const swiperTrending = new Swiper(".swiper-container-trending", {
 	slidesPerGroup: 1,
 	loop: true,
 	autoplay: {
@@ -534,7 +716,7 @@ let swiperTrending = new Swiper(".swiper-container-trending", {
 	},
 });
 
-let swiperTopRated = new Swiper(".swiper-container-top-rated", {
+const swiperTopRated = new Swiper(".swiper-container-top-rated", {
 	slidesPerGroup: 1,
 	loop: true,
 	autoplay: {
@@ -561,193 +743,3 @@ let swiperTopRated = new Swiper(".swiper-container-top-rated", {
 		},
 	},
 });
-
-/* =========================================------================================== */
-
-let seeLaterMovies = [];
-const localSeeLaterMovies =
-	JSON.parse(localStorage.getItem("SeeLaterMovies")) || [];
-seeLaterMovies = localSeeLaterMovies;
-
-const addSeeLaterMovies = (id) => {
-	fetch(base_url + "/movie/" + id + "?" + api_key + "&language=es")
-		.then((res) => res.json())
-		.then((data) => {
-			const result = seeLaterMovies.find((movie) => movie.id === data.id);
-
-			if (!result) {
-				seeLaterMovies.push(data);
-				localStorage.setItem("SeeLaterMovies", JSON.stringify(seeLaterMovies));
-			}
-		});
-};
-
-const seeLaterBtn = document.getElementById("see-later");
-
-seeLaterBtn.addEventListener("click", () => {
-	showMovies(seeLaterMovies, "see-later", movies);
-});
-
-const changeStateSeeLaterMoviesBtn = (id, type) => {
-	const result = seeLaterMovies.find((movie) => movie.id === id);
-
-	if (result) {
-		document
-			.getElementById(`see-later-${type}-${id}`)
-			.classList.remove("btn-warning");
-		document.getElementById(`see-later-${type}-${id}`).textContent = "-";
-		document
-			.getElementById(`see-later-${type}-${id}`)
-			.classList.add("btn-danger", "added");
-	} else {
-		document
-			.getElementById(`see-later-${type}-${id}`)
-			.classList.remove("btn-danger");
-		document.getElementById(`see-later-${type}-${id}`).textContent = "+";
-		document
-			.getElementById(`see-later-${type}-${id}`)
-			.classList.add("btn-warning");
-		document
-			.getElementById(`see-later-${type}-${id}`)
-			.classList.remove("added");
-	}
-};
-
-const removeSeeLaterMovies = (id) => {
-	const result = seeLaterMovies.find((movie) => movie.id === id);
-
-	const index = seeLaterMovies.indexOf(result);
-
-	seeLaterMovies.splice(index, 1);
-
-	localStorage.setItem("SeeLaterMovies", JSON.stringify(seeLaterMovies));
-};
-
-/*==============================================================================*/
-
-const render = (movie, type) => {
-	const {
-		title,
-		poster_path,
-		vote_average,
-		overview,
-		release_date,
-		genre_ids,
-		id,
-	} = movie;
-
-	switch (type) {
-		case "default":
-			return `<div class="movie">
-			<img src="${
-				poster_path
-					? img_url + poster_path
-					: "https://picsum.photos/id/237/1000/1000"
-			}" alt="${title}" />
-			<div class="image-overlay">
-				<div class="overview">
-					<h3>${title}</h3>
-					<span class="info-movie fs-5">${findGenre(genre_ids)}</span>
-					<span class="info-movie ${getColor(
-						vote_average
-					)}"><i class="fas fa-star"></i> ${
-				vote_average !== 0 ? vote_average : "No hay datos"
-			}</span>
-					<span class="info-movie"
-						><i class="far fa-calendar-alt"></i> ${release_date}</span
-					>
-					<p>
-					${overview !== "" ? overview : "No hay información "}
-					</p>
-					<button id="${type}-${id}" class="btn btn-secondary fs-4">Ver trailer</button>
-					<button id="see-later-${type}-${id}" class="btn btn-warning fs-4">+</button>
-				</div>
-			</div>
-		</div>`;
-
-		case "trending":
-			return `<img src="${
-				poster_path
-					? img_url + poster_path
-					: "https://picsum.photos/id/237/1000/1000"
-			}" alt="${title}" />
-	<div class="image-overlay">
-		<div class="overview">
-			<h3>${title}</h3>
-			<span class="info-movie fs-5">${findGenre(genre_ids)}</span>
-			<span class="info-movie ${getColor(vote_average)}"
-				><i class="fas fa-star"></i> ${
-					vote_average !== 0 ? vote_average : "No hay datos"
-				}</span
-			>
-			<span class="info-movie"
-				><i class="far fa-calendar-alt"></i> ${release_date}</span
-			>
-			<p>
-			${overview !== "" ? overview : "No hay información "}
-			</p>
-			<button id="${type}-${id}" class="btn btn-secondary fs-4">Ver trailer</button>
-			<button id="see-later-${type}-${id}" class="btn btn-warning fs-4">+</button>
-		</div>
-	</div>`;
-
-		case "top-rated":
-			return `<img src="${
-				poster_path
-					? img_url + poster_path
-					: "https://picsum.photos/id/237/1000/1000"
-			}" alt="${title}" />
-	<div class="image-overlay">
-		<div class="overview">
-			<h3>${title}</h3>
-			<span class="info-movie fs-5">${findGenre(genre_ids)}</span>
-			<span class="info-movie ${getColor(vote_average)}"
-				><i class="fas fa-star"></i> ${
-					vote_average !== 0 ? vote_average : "No hay datos"
-				}</span
-			>
-			<span class="info-movie"
-				><i class="far fa-calendar-alt"></i> ${release_date}</span
-			>
-			<p>
-			${overview !== "" ? overview : "No hay información "}
-			</p>
-			<button id="${type}-${id}" class="btn btn-secondary fs-4">Ver trailer</button>
-			<button id="see-later-${type}-${id}" class="btn btn-warning fs-4">+</button>
-		</div>
-	</div>`;
-
-		case "see-later":
-			return `<div class="movie">
-			<img src="${
-				poster_path
-					? img_url + poster_path
-					: "https://picsum.photos/id/237/1000/1000"
-			}" alt="${title}" />
-			<div class="image-overlay">
-				<div class="overview">
-					<h3>${title}</h3>
-					<span class="info-movie fs-5">${genres.map((genre) => {
-						return " " + genre.name;
-					})}</span>
-					<span class="info-movie ${getColor(
-						vote_average
-					)}"><i class="fas fa-star"></i> ${
-				vote_average !== 0 ? vote_average : "No hay datos"
-			}</span>
-					<span class="info-movie"
-						><i class="far fa-calendar-alt"></i> ${release_date}</span
-					>
-					<p>
-					${overview !== "" ? overview : "No hay información "}
-					</p>
-					<button id="${type}-${id}" class="btn btn-secondary fs-4">Ver trailer</button>
-					<button id="see-later-${type}-${id}" class="btn btn-warning fs-4">+</button>
-				</div>
-			</div>
-		</div>`;
-
-		default:
-			console.warn("type not found");
-	}
-};
