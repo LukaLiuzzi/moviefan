@@ -142,39 +142,31 @@ const scrollToMovies = () => {
 
 // Fetching API
 
-// Default movies
-const getMovies = (url) => {
-	lastUrl = url;
-	fetch(url)
-		.then((res) => res.json())
-		.then((data) => {
-			if (data.results.length !== 0) {
-				showMovies(data.results, "default", movies);
-				currentPage = data.page;
-				nextPage = currentPage + 1;
-				prevPage = currentPage - 1;
-				totalPages = data.total_pages;
-
-				current.textContent = currentPage;
-
-				// document
-				// 	.querySelector(".movies-container")
-				// 	.scrollIntoView({ behavior: "smooth" });
-			} else {
-				document.querySelector(
-					".movies-container"
-				).innerHTML = `<h3 class="text-white text-center my-5">No se encontraron peliculas </h3>`;
-			}
-		});
-};
-
-// Trending movies
-const getMoviesPrueba = (url, type, container) => {
+const getMovies = (url, type, container) => {
+	if (type === "default") {
+		lastUrl = url;
+	}
 	fetch(url)
 		.then((res) => res.json())
 		.then((data) => {
 			if (data.results.length !== 0) {
 				showMovies(data.results, type, container);
+				if (type === "default") {
+					currentPage = data.page;
+					nextPage = currentPage + 1;
+					prevPage = currentPage - 1;
+					totalPages = data.total_pages;
+
+					current.textContent = currentPage;
+
+					document
+						.querySelector(".movies-container")
+						.scrollIntoView({ behavior: "smooth" });
+				}
+			} else {
+				document.querySelector(
+					".movies-container"
+				).innerHTML = `<h3 class="text-white text-center my-5">No se encontraron peliculas </h3>`;
 			}
 		});
 };
@@ -378,10 +370,14 @@ form.addEventListener("submit", (e) => {
 
 	if (searchTerm) {
 		movies.innerHTML = "";
-		getMovies(search_url + "&language=es&query=" + searchTerm);
+		getMovies(
+			search_url + "&language=es&query=" + searchTerm,
+			"default",
+			movies
+		);
 	} else {
 		movies.innerHTML = "";
-		getMovies(final_url);
+		getMovies(final_url, "default", movies);
 	}
 	scrollToMovies();
 });
@@ -412,7 +408,9 @@ const setGenre = () => {
 			}
 			movies.innerHTML = "";
 			getMovies(
-				final_url + "&with_genres=" + encodeURI(selectedGenre.join(","))
+				final_url +
+					"&with_genres=" +
+					encodeURI(selectedGenre.join(","), "default", movies)
 			);
 			highlightSelection();
 			scrollToMovies();
@@ -449,7 +447,7 @@ const clearBtn = () => {
 			selectedGenre = [];
 			setGenre();
 			movies.innerHTML = "";
-			getMovies(final_url);
+			getMovies(final_url, "default", movies);
 			scrollToMovies();
 		});
 		tags.append(clear);
@@ -473,7 +471,7 @@ const pageCall = (page) => {
 	if (key[0] != "page") {
 		let url = lastUrl + "&page=" + page;
 		movies.innerHTML = "";
-		getMovies(url);
+		getMovies(url, "default", movies);
 	} else {
 		key[1] = page.toString();
 		let a = key.join("=");
@@ -481,7 +479,7 @@ const pageCall = (page) => {
 		let b = queryParams.join("&");
 		let url = urlSplit[0] + "?" + b;
 		movies.innerHTML = "";
-		getMovies(url);
+		getMovies(url, "default", movies);
 	}
 };
 
@@ -500,9 +498,9 @@ next.addEventListener("click", () => {
 });
 
 // Painting default results
-getMovies(final_url);
-getMoviesPrueba(request.fetchTrending, "trending", trendingMovies);
-getMoviesPrueba(request.fetchTopRated, "top-rated", topRatedMovies);
+getMovies(final_url, "default", movies);
+getMovies(request.fetchTrending, "trending", trendingMovies);
+getMovies(request.fetchTopRated, "top-rated", topRatedMovies);
 document.getElementById("close-trailers-btn").onclick = () => {
 	closeOverlayTrailers();
 };
