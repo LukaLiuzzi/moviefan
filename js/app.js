@@ -149,7 +149,7 @@ const getMovies = (url) => {
 		.then((res) => res.json())
 		.then((data) => {
 			if (data.results.length !== 0) {
-				showMovies(data.results);
+				showMovies(data.results, "default", movies);
 				currentPage = data.page;
 				nextPage = currentPage + 1;
 				prevPage = currentPage - 1;
@@ -169,23 +169,12 @@ const getMovies = (url) => {
 };
 
 // Trending movies
-const getTrendingMovies = (url) => {
+const getMoviesPrueba = (url, type, container) => {
 	fetch(url)
 		.then((res) => res.json())
 		.then((data) => {
 			if (data.results.length !== 0) {
-				showTrendingMovies(data.results);
-			}
-		});
-};
-
-// Top Rated movies
-const getTopRatedMovies = (url) => {
-	fetch(url)
-		.then((res) => res.json())
-		.then((data) => {
-			if (data.results.length !== 0) {
-				showTopRatedMovies(data.results);
+				showMovies(data.results, type, container);
 			}
 		});
 };
@@ -194,184 +183,59 @@ const getTopRatedMovies = (url) => {
 document.getElementById("copy").textContent =
 	"All rights reserved • " + year.getFullYear();
 
-// Default movies
-const showMovies = (data) => {
-	data.forEach((movie) => {
-		const {
-			title,
-			poster_path,
-			vote_average,
-			overview,
-			release_date,
-			genre_ids,
-			id,
-		} = movie;
+// Show Movies
+const showMovies = (data, type, container) => {
+	if (type === "see-later") {
+		movies.innerHTML = "";
+		moviesTitle.textContent = "Ver mas tarde";
 
+		if (document.querySelector(".pagination")) {
+			document.querySelector(".pagination").remove();
+		}
+
+		const existBackBtn = document.getElementById("back-btn");
+		if (!existBackBtn) {
+			const backBtn = document.createElement("div");
+			backBtn.id = "back-btn";
+			backBtn.innerHTML = `<button class="btn btn-success fs-2 my-5 d-block mx-auto">Volver</button>`;
+			document.querySelector(".movies-container").append(backBtn);
+			backBtn.onclick = () => {
+				window.location = "index.html";
+			};
+		}
+	}
+
+	data.forEach((movie) => {
 		const cardMovie = document.createElement("div");
 
-		cardMovie.innerHTML = `<div class="movie">
-		<img src="${
-			poster_path
-				? img_url + poster_path
-				: "https://picsum.photos/id/237/1000/1000"
-		}" alt="${title}" />
-		<div class="image-overlay">
-			<div class="overview">
-				<h3>${title}</h3>
-				<span class="info-movie fs-5">${findGenre(genre_ids)}</span>
-				<span class="info-movie ${getColor(
-					vote_average
-				)}"><i class="fas fa-star"></i> ${
-			vote_average !== 0 ? vote_average : "No hay datos"
-		}</span>
-				<span class="info-movie"
-					><i class="far fa-calendar-alt"></i> ${release_date}</span
-				>
-				<p>
-				${overview !== "" ? overview : "No hay información "}
-				</p>
-				<button id="default-${id}" class="btn btn-secondary fs-4">Ver trailer</button>
-				<button id="see-later-${id}" class="btn btn-warning fs-4">+</button>
-			</div>
-		</div>
-	</div>`;
-		movies.appendChild(cardMovie);
+		if (type === "trending" || type === "top-rated") {
+			cardMovie.classList.add("swiper-slide", "movie");
+		}
 
-		document.getElementById(`default-${id}`).addEventListener("click", () => {
-			showTrailers(movie);
-		});
+		cardMovie.innerHTML = render(movie, type);
+		container.appendChild(cardMovie);
 
-		document.getElementById(`see-later-${id}`).addEventListener("click", () => {
-			if (
-				!document.getElementById(`see-later-${id}`).classList.contains("added")
-			) {
-				addSeeLaterMovies(id);
-				changeStateSeeLaterMoviesBtn(id);
-			} else {
-				removeSeeLaterMovies(id);
-				changeStateSeeLaterMoviesBtn(id);
-			}
-		});
-	});
-};
+		document
+			.getElementById(`${type}-${movie.id}`)
+			.addEventListener("click", () => {
+				showTrailers(movie);
+			});
 
-// Trending movies
-const showTrendingMovies = (data) => {
-	data.forEach((movie) => {
-		const {
-			title,
-			poster_path,
-			vote_average,
-			overview,
-			release_date,
-			genre_ids,
-			id,
-		} = movie;
-
-		const cardMovie = document.createElement("div");
-		cardMovie.classList.add("swiper-slide", "movie");
-
-		cardMovie.innerHTML = `<img src="${
-			poster_path
-				? img_url + poster_path
-				: "https://picsum.photos/id/237/1000/1000"
-		}" alt="${title}" />
-		<div class="image-overlay">
-			<div class="overview">
-				<h3>${title}</h3>
-				<span class="info-movie fs-5">${findGenre(genre_ids)}</span>
-				<span class="info-movie ${getColor(vote_average)}"
-					><i class="fas fa-star"></i> ${
-						vote_average !== 0 ? vote_average : "No hay datos"
-					}</span
-				>
-				<span class="info-movie"
-					><i class="far fa-calendar-alt"></i> ${release_date}</span
-				>
-				<p>
-				${overview !== "" ? overview : "No hay información "}
-				</p>
-				<button id="trending-${id}" class="btn btn-secondary fs-4">Ver trailer</button>
-				<button id="see-later-${id}" class="btn btn-warning fs-4">+</button>
-			</div>
-		</div>`;
-		trendingMovies.appendChild(cardMovie);
-
-		document.getElementById(`trending-${id}`).addEventListener("click", () => {
-			showTrailers(movie);
-		});
-
-		document.getElementById(`see-later-${id}`).addEventListener("click", () => {
-			if (
-				!document.getElementById(`see-later-${id}`).classList.contains("added")
-			) {
-				addSeeLaterMovies(id);
-				changeStateSeeLaterMoviesBtn(id);
-			} else {
-				removeSeeLaterMovies(id);
-				changeStateSeeLaterMoviesBtn(id);
-			}
-		});
-	});
-};
-
-// Top Rated movies
-const showTopRatedMovies = (data) => {
-	data.forEach((movie) => {
-		const {
-			title,
-			poster_path,
-			vote_average,
-			overview,
-			release_date,
-			genre_ids,
-			id,
-		} = movie;
-
-		const cardMovie = document.createElement("div");
-		cardMovie.classList.add("swiper-slide", "movie");
-
-		cardMovie.innerHTML = `<img src="${
-			poster_path
-				? img_url + poster_path
-				: "https://picsum.photos/id/237/1000/1000"
-		}" alt="${title}" />
-		<div class="image-overlay">
-			<div class="overview">
-				<h3>${title}</h3>
-				<span class="info-movie fs-5">${findGenre(genre_ids)}</span>
-				<span class="info-movie ${getColor(vote_average)}"
-					><i class="fas fa-star"></i> ${
-						vote_average !== 0 ? vote_average : "No hay datos"
-					}</span
-				>
-				<span class="info-movie"
-					><i class="far fa-calendar-alt"></i> ${release_date}</span
-				>
-				<p>
-				${overview !== "" ? overview : "No hay información "}
-				</p>
-				<button id="top-rated-${id}" class="btn btn-secondary fs-4">Ver trailer</button>
-				<button id="see-later-${id}" class="btn btn-warning fs-4">+</button>
-			</div>
-		</div>`;
-		topRatedMovies.appendChild(cardMovie);
-
-		document.getElementById(`top-rated-${id}`).addEventListener("click", () => {
-			showTrailers(movie);
-		});
-
-		document.getElementById(`see-later-${id}`).addEventListener("click", () => {
-			if (
-				!document.getElementById(`see-later-${id}`).classList.contains("added")
-			) {
-				addSeeLaterMovies(id);
-				changeStateSeeLaterMoviesBtn(id);
-			} else {
-				removeSeeLaterMovies(id);
-				changeStateSeeLaterMoviesBtn(id);
-			}
-		});
+		document
+			.getElementById(`see-later-${type}-${movie.id}`)
+			.addEventListener("click", () => {
+				if (
+					!document
+						.getElementById(`see-later-${type}-${movie.id}`)
+						.classList.contains("added")
+				) {
+					addSeeLaterMovies(movie.id);
+					changeStateSeeLaterMoviesBtn(movie.id, type);
+				} else {
+					removeSeeLaterMovies(movie.id);
+					changeStateSeeLaterMoviesBtn(movie.id, type);
+				}
+			});
 	});
 };
 
@@ -412,16 +276,18 @@ const showTrailers = (movie) => {
 					overlayTrailerContent.innerHTML = content;
 					showVideos();
 				} else {
-					overlayTrailerContent.innerHTML = `
+					const alert = document.createElement("div");
+					alert.innerHTML = `
 					<div class="alert alert-danger d-flex justify-content-center align-items-center no-trailers" role="alert">
 					<div>
-					<i class="fas fa-exclamation-triangle"></i> <span class="text-black fw-bold">Esta pelicula no tiene trailer!</span>
+					<i class="fas fa-exclamation-triangle"></i> <span class="text-black fw-bold">La pelicula "${movie.original_title}" no tiene trailer!</span>
 					</div>
 					`;
+					document.body.prepend(alert);
 
 					setTimeout(() => {
-						overlayTrailerContent.innerHTML = "";
-					}, 2000);
+						alert.remove();
+					}, 3000);
 				}
 			}
 		});
@@ -635,8 +501,8 @@ next.addEventListener("click", () => {
 
 // Painting default results
 getMovies(final_url);
-getTrendingMovies(request.fetchTrending);
-getTopRatedMovies(request.fetchTopRated);
+getMoviesPrueba(request.fetchTrending, "trending", trendingMovies);
+getMoviesPrueba(request.fetchTopRated, "top-rated", topRatedMovies);
 document.getElementById("close-trailers-btn").onclick = () => {
 	closeOverlayTrailers();
 };
@@ -721,22 +587,31 @@ const addSeeLaterMovies = (id) => {
 const seeLaterBtn = document.getElementById("see-later");
 
 seeLaterBtn.addEventListener("click", () => {
-	showSeeLaterMovies();
+	showMovies(seeLaterMovies, "see-later", movies);
 });
 
-const changeStateSeeLaterMoviesBtn = (id) => {
+const changeStateSeeLaterMoviesBtn = (id, type) => {
 	const result = seeLaterMovies.find((movie) => movie.id === id);
 
 	if (result) {
-		document.getElementById(`see-later-${id}`).classList.remove("btn-warning");
-		document.getElementById(`see-later-${id}`).textContent = "-";
-		document.getElementById(`see-later-${id}`).classList.add("btn-danger");
-		document.getElementById(`see-later-${id}`).classList.add("added");
+		document
+			.getElementById(`see-later-${type}-${id}`)
+			.classList.remove("btn-warning");
+		document.getElementById(`see-later-${type}-${id}`).textContent = "-";
+		document
+			.getElementById(`see-later-${type}-${id}`)
+			.classList.add("btn-danger", "added");
 	} else {
-		document.getElementById(`see-later-${id}`).classList.remove("btn-danger");
-		document.getElementById(`see-later-${id}`).textContent = "+";
-		document.getElementById(`see-later-${id}`).classList.add("btn-warning");
-		document.getElementById(`see-later-${id}`).classList.remove("added");
+		document
+			.getElementById(`see-later-${type}-${id}`)
+			.classList.remove("btn-danger");
+		document.getElementById(`see-later-${type}-${id}`).textContent = "+";
+		document
+			.getElementById(`see-later-${type}-${id}`)
+			.classList.add("btn-warning");
+		document
+			.getElementById(`see-later-${type}-${id}`)
+			.classList.remove("added");
 	}
 };
 
@@ -750,84 +625,131 @@ const removeSeeLaterMovies = (id) => {
 	localStorage.setItem("SeeLaterMovies", JSON.stringify(seeLaterMovies));
 };
 
-const showSeeLaterMovies = () => {
-	movies.innerHTML = "";
-	moviesTitle.textContent = "Ver mas tarde";
+/*==============================================================================*/
 
-	if (document.querySelector(".pagination")) {
-		document.querySelector(".pagination").remove();
-	}
+const render = (movie, type) => {
+	const {
+		title,
+		poster_path,
+		vote_average,
+		overview,
+		release_date,
+		genre_ids,
+		id,
+	} = movie;
 
-	const existBackBtn = document.getElementById("back-btn");
-	if (!existBackBtn) {
-		const backBtn = document.createElement("div");
-		backBtn.id = "back-btn";
-		backBtn.innerHTML = `<button class="btn btn-success fs-2 my-5 d-block mx-auto">Volver</button>`;
-		document.querySelector(".movies-container").append(backBtn);
-		backBtn.onclick = () => {
-			window.location = "index.html";
-		};
-	}
-
-	seeLaterMovies.forEach((movie) => {
-		const {
-			title,
-			poster_path,
-			vote_average,
-			overview,
-			release_date,
-			genres,
-			id,
-		} = movie;
-
-		const cardMovie = document.createElement("div");
-
-		cardMovie.innerHTML = `<div class="movie">
-		<img src="${
-			poster_path
-				? img_url + poster_path
-				: "https://picsum.photos/id/237/1000/1000"
-		}" alt="${title}" />
-		<div class="image-overlay">
-			<div class="overview">
-				<h3>${title}</h3>
-				<span class="info-movie fs-5">${genres.map((genre) => {
-					return " " + genre.name;
-				})}</span>
-				<span class="info-movie ${getColor(
-					vote_average
-				)}"><i class="fas fa-star"></i> ${
-			vote_average !== 0 ? vote_average : "No hay datos"
-		}</span>
-				<span class="info-movie"
-					><i class="far fa-calendar-alt"></i> ${release_date}</span
-				>
-				<p>
-				${overview !== "" ? overview : "No hay información "}
-				</p>
-				<button id="${id}" class="btn btn-secondary fs-4">Ver trailer</button>
-				<button id="see-later-${id}" class="btn btn-warning fs-4">+</button>
+	switch (type) {
+		case "default":
+			return `<div class="movie">
+			<img src="${
+				poster_path
+					? img_url + poster_path
+					: "https://picsum.photos/id/237/1000/1000"
+			}" alt="${title}" />
+			<div class="image-overlay">
+				<div class="overview">
+					<h3>${title}</h3>
+					<span class="info-movie fs-5">${findGenre(genre_ids)}</span>
+					<span class="info-movie ${getColor(
+						vote_average
+					)}"><i class="fas fa-star"></i> ${
+				vote_average !== 0 ? vote_average : "No hay datos"
+			}</span>
+					<span class="info-movie"
+						><i class="far fa-calendar-alt"></i> ${release_date}</span
+					>
+					<p>
+					${overview !== "" ? overview : "No hay información "}
+					</p>
+					<button id="${type}-${id}" class="btn btn-secondary fs-4">Ver trailer</button>
+					<button id="see-later-${type}-${id}" class="btn btn-warning fs-4">+</button>
+				</div>
 			</div>
+		</div>`;
+
+		case "trending":
+			return `<img src="${
+				poster_path
+					? img_url + poster_path
+					: "https://picsum.photos/id/237/1000/1000"
+			}" alt="${title}" />
+	<div class="image-overlay">
+		<div class="overview">
+			<h3>${title}</h3>
+			<span class="info-movie fs-5">${findGenre(genre_ids)}</span>
+			<span class="info-movie ${getColor(vote_average)}"
+				><i class="fas fa-star"></i> ${
+					vote_average !== 0 ? vote_average : "No hay datos"
+				}</span
+			>
+			<span class="info-movie"
+				><i class="far fa-calendar-alt"></i> ${release_date}</span
+			>
+			<p>
+			${overview !== "" ? overview : "No hay información "}
+			</p>
+			<button id="${type}-${id}" class="btn btn-secondary fs-4">Ver trailer</button>
+			<button id="see-later-${type}-${id}" class="btn btn-warning fs-4">+</button>
 		</div>
 	</div>`;
-		movies.appendChild(cardMovie);
 
-		document.getElementById(id).addEventListener("click", () => {
-			showTrailers(movie);
-		});
+		case "top-rated":
+			return `<img src="${
+				poster_path
+					? img_url + poster_path
+					: "https://picsum.photos/id/237/1000/1000"
+			}" alt="${title}" />
+	<div class="image-overlay">
+		<div class="overview">
+			<h3>${title}</h3>
+			<span class="info-movie fs-5">${findGenre(genre_ids)}</span>
+			<span class="info-movie ${getColor(vote_average)}"
+				><i class="fas fa-star"></i> ${
+					vote_average !== 0 ? vote_average : "No hay datos"
+				}</span
+			>
+			<span class="info-movie"
+				><i class="far fa-calendar-alt"></i> ${release_date}</span
+			>
+			<p>
+			${overview !== "" ? overview : "No hay información "}
+			</p>
+			<button id="${type}-${id}" class="btn btn-secondary fs-4">Ver trailer</button>
+			<button id="see-later-${type}-${id}" class="btn btn-warning fs-4">+</button>
+		</div>
+	</div>`;
 
-		changeStateSeeLaterMoviesBtn(id);
+		case "see-later":
+			return `<div class="movie">
+			<img src="${
+				poster_path
+					? img_url + poster_path
+					: "https://picsum.photos/id/237/1000/1000"
+			}" alt="${title}" />
+			<div class="image-overlay">
+				<div class="overview">
+					<h3>${title}</h3>
+					<span class="info-movie fs-5">${genres.map((genre) => {
+						return " " + genre.name;
+					})}</span>
+					<span class="info-movie ${getColor(
+						vote_average
+					)}"><i class="fas fa-star"></i> ${
+				vote_average !== 0 ? vote_average : "No hay datos"
+			}</span>
+					<span class="info-movie"
+						><i class="far fa-calendar-alt"></i> ${release_date}</span
+					>
+					<p>
+					${overview !== "" ? overview : "No hay información "}
+					</p>
+					<button id="${type}-${id}" class="btn btn-secondary fs-4">Ver trailer</button>
+					<button id="see-later-${type}-${id}" class="btn btn-warning fs-4">+</button>
+				</div>
+			</div>
+		</div>`;
 
-		document.getElementById(`see-later-${id}`).addEventListener("click", () => {
-			if (
-				!document.getElementById(`see-later-${id}`).classList.contains("added")
-			) {
-				addSeeLaterMovies(id);
-				changeStateSeeLaterMoviesBtn(id);
-			} else {
-				removeSeeLaterMovies(id);
-				changeStateSeeLaterMoviesBtn(id);
-			}
-		});
-	});
+		default:
+			console.warn("type not found");
+	}
 };
