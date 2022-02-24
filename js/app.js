@@ -297,9 +297,18 @@ const getMovies = (url, type, container) => {
 					current.textContent = currentPage;
 				}
 			} else {
-				document.querySelector(
-					".movies-container"
-				).innerHTML = `<h3 class="text-white text-center my-5">No se encontraron peliculas </h3>`;
+				const alert = document.createElement("div");
+				alert.innerHTML = `
+					<div class="alert alert-danger d-flex justify-content-center align-items-center no-trailers" role="alert">
+					<div>
+					<i class="fas fa-exclamation-triangle"></i> <span class="text-black fw-bold">No se encontraron peliculas con ese nombre!</span>
+					</div>
+					`;
+				document.body.prepend(alert);
+
+				setTimeout(() => {
+					alert.remove();
+				}, 3000);
 			}
 		});
 };
@@ -340,27 +349,33 @@ const showMovies = (data, type, container) => {
 		cardMovie.innerHTML = render(movie, type);
 		container.appendChild(cardMovie);
 
-		document
-			.getElementById(`${type}-${movie.id}`)
-			.addEventListener("click", () => {
-				showTrailers(movie);
-			});
+		if (document.getElementById(`${type}-${movie.id}`)) {
+			document
+				.getElementById(`${type}-${movie.id}`)
+				.addEventListener("click", () => {
+					showTrailers(movie);
+				});
+		}
 
-		changeSeeLaterBtn(movie.id, type);
+		if (
+			document.getElementById(`see-later-${type}-${movie.id}`) ||
+			document.getElementById(`remove-see-later-${type}-${movie.id}`)
+		) {
+			changeSeeLaterBtn(movie.id, type);
+			document
+				.getElementById(`see-later-${type}-${movie.id}`)
+				.addEventListener("click", () => {
+					addSeeLaterMovies(movie.id);
+					changeSeeLaterBtn(movie.id, type);
+				});
 
-		document
-			.getElementById(`see-later-${type}-${movie.id}`)
-			.addEventListener("click", () => {
-				addSeeLaterMovies(movie.id);
-				changeSeeLaterBtn(movie.id, type);
-			});
-
-		document
-			.getElementById(`remove-see-later-${type}-${movie.id}`)
-			.addEventListener("click", () => {
-				removeSeeLaterMovies(movie.id);
-				changeSeeLaterBtn(movie.id, type);
-			});
+			document
+				.getElementById(`remove-see-later-${type}-${movie.id}`)
+				.addEventListener("click", () => {
+					removeSeeLaterMovies(movie.id);
+					changeSeeLaterBtn(movie.id, type);
+				});
+		}
 	});
 };
 
@@ -541,9 +556,9 @@ const setGenre = () => {
 			}
 			movies.innerHTML = "";
 			getMovies(
-				final_url +
-					"&with_genres=" +
-					encodeURI(selectedGenre.join(","), "default", movies)
+				final_url + "&with_genres=" + encodeURI(selectedGenre.join(",")),
+				"default",
+				movies
 			);
 			highlightSelection();
 			scrollToMovies();
