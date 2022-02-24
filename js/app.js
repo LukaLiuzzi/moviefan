@@ -118,6 +118,7 @@ const overlayTrailerContent = document.getElementById(
 const prevTrailerArrow = document.getElementById("left-arrow");
 const nextTrailerArrow = document.getElementById("right-arrow");
 const moviesTitle = document.getElementById("movies-title");
+const seeLaterBtn = document.getElementById("see-later");
 const year = new Date();
 
 // Pagination variables
@@ -486,7 +487,7 @@ let stopVideos = () => {
 		if (video.tagName.toLowerCase() === "video") {
 			video.pause();
 		} else {
-			var src = video.src;
+			let src = video.src;
 			video.src = src;
 		}
 	});
@@ -496,6 +497,10 @@ const closeOverlayTrailers = () => {
 	document.getElementById("overlay-trailers").style.width = "0%";
 	stopVideos();
 	document.querySelector("html").classList.remove("stop-scrolling");
+};
+
+document.getElementById("close-trailers-btn").onclick = () => {
+	closeOverlayTrailers();
 };
 // Painting color according to result
 const getColor = (vote) => {
@@ -660,10 +665,9 @@ const addSeeLaterMovies = (id) => {
 		});
 };
 
-const seeLaterBtn = document.getElementById("see-later");
-
 seeLaterBtn.addEventListener("click", () => {
 	showMovies(seeLaterMovies, "see-later", movies);
+	scrollToMovies();
 });
 
 const removeSeeLaterMovies = (id) => {
@@ -698,9 +702,6 @@ const changeSeeLaterBtn = (id, type) => {
 getMovies(final_url, "default", movies);
 getMovies(request.fetchTrending, "trending", trendingMovies);
 getMovies(request.fetchTopRated, "top-rated", topRatedMovies);
-document.getElementById("close-trailers-btn").onclick = () => {
-	closeOverlayTrailers();
-};
 
 // SWIPER
 const swiperTrending = new Swiper(".swiper-container-trending", {
