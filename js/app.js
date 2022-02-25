@@ -133,10 +133,7 @@ let activeSlide = 0;
 let totalVideos = 0;
 
 // See Later variables
-let seeLaterMovies = [];
-const localSeeLaterMovies =
-	JSON.parse(localStorage.getItem("SeeLaterMovies")) || [];
-seeLaterMovies = localSeeLaterMovies;
+const seeLaterMovies = JSON.parse(localStorage.getItem("SeeLaterMovies")) || [];
 
 // Functions
 
@@ -366,7 +363,7 @@ const showMovies = (data, type, container) => {
 			document
 				.getElementById(`see-later-${type}-${movie.id}`)
 				.addEventListener("click", () => {
-					addSeeLaterMovies(movie.id);
+					addSeeLaterMovies(movie.id, type);
 					changeSeeLaterBtn(movie.id, type);
 				});
 
@@ -404,7 +401,7 @@ const showTrailers = (movie) => {
 					});
 
 					let content = `
-					<h2 class="text-white text-center">${movie.original_title}</h2>
+					<h2 class="text-white text-center">${movie.title}</h2>
 					<br/>
 
 					${embed.join("")};
@@ -421,7 +418,7 @@ const showTrailers = (movie) => {
 					alert.innerHTML = `
 					<div class="alert alert-danger d-flex justify-content-center align-items-center no-trailers" role="alert">
 					<div>
-					<i class="fas fa-exclamation-triangle"></i> <span class="text-black fw-bold">La pelicula "${movie.original_title}" no tiene trailer!</span>
+					<i class="fas fa-exclamation-triangle"></i> <span class="text-black fw-bold">La pelicula "${movie.title}" no tiene trailer!</span>
 					</div>
 					`;
 					document.body.prepend(alert);
@@ -650,19 +647,17 @@ next.addEventListener("click", () => {
 	scrollToMovies();
 });
 
-// See Later
-
-const addSeeLaterMovies = (id) => {
-	fetch(base_url + "/movie/" + id + "?" + api_key + "&language=es")
-		.then((res) => res.json())
-		.then((data) => {
-			const result = seeLaterMovies.find((movie) => movie.id === data.id);
-
-			if (!result) {
-				seeLaterMovies.push(data);
-				localStorage.setItem("SeeLaterMovies", JSON.stringify(seeLaterMovies));
-			}
-		});
+const addSeeLaterMovies = async (id, type) => {
+	const response = await fetch(
+		base_url + "/movie/" + id + "?" + api_key + "&language=es"
+	);
+	const movie = await response.json();
+	const result = seeLaterMovies.some((movie) => id === movie.id);
+	if (!result) {
+		seeLaterMovies.push(movie);
+		localStorage.setItem("SeeLaterMovies", JSON.stringify(seeLaterMovies));
+	}
+	changeSeeLaterBtn(movie.id, type);
 };
 
 seeLaterBtn.addEventListener("click", () => {
@@ -671,7 +666,7 @@ seeLaterBtn.addEventListener("click", () => {
 });
 
 const removeSeeLaterMovies = (id) => {
-	const result = seeLaterMovies.find((movie) => movie.id === id);
+	const result = seeLaterMovies.some((movie) => movie.id === id);
 
 	const index = seeLaterMovies.indexOf(result);
 
@@ -681,7 +676,7 @@ const removeSeeLaterMovies = (id) => {
 };
 
 const changeSeeLaterBtn = (id, type) => {
-	let result = seeLaterMovies.find((movie) => movie.id === id);
+	let result = seeLaterMovies.some((movie) => movie.id === id);
 
 	if (result) {
 		document.getElementById(`see-later-${type}-${id}`).classList.add("d-none");
