@@ -364,14 +364,12 @@ const showMovies = (data, type, container) => {
 				.getElementById(`see-later-${type}-${movie.id}`)
 				.addEventListener("click", () => {
 					addSeeLaterMovies(movie.id, type);
-					changeSeeLaterBtn(movie.id, type);
 				});
 
 			document
 				.getElementById(`remove-see-later-${type}-${movie.id}`)
 				.addEventListener("click", () => {
-					removeSeeLaterMovies(movie.id);
-					changeSeeLaterBtn(movie.id, type);
+					removeSeeLaterMovies(movie.id, type);
 				});
 		}
 	});
@@ -647,6 +645,7 @@ next.addEventListener("click", () => {
 	scrollToMovies();
 });
 
+// See Later
 const addSeeLaterMovies = async (id, type) => {
 	const response = await fetch(
 		base_url + "/movie/" + id + "?" + api_key + "&language=es"
@@ -665,14 +664,16 @@ seeLaterBtn.addEventListener("click", () => {
 	scrollToMovies();
 });
 
-const removeSeeLaterMovies = (id) => {
-	const result = seeLaterMovies.some((movie) => movie.id === id);
+const removeSeeLaterMovies = (id, type) => {
+	const result = seeLaterMovies.find((movie) => movie.id === id);
 
 	const index = seeLaterMovies.indexOf(result);
 
 	seeLaterMovies.splice(index, 1);
 
 	localStorage.setItem("SeeLaterMovies", JSON.stringify(seeLaterMovies));
+
+	changeSeeLaterBtn(id, type);
 };
 
 const changeSeeLaterBtn = (id, type) => {
