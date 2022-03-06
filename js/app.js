@@ -1,5 +1,5 @@
+"use strict";
 // Declaration of variables
-
 // API variables
 const api_key = "api_key=e11854d9b2dd14d971cfa32f0cc594d7";
 
@@ -299,7 +299,7 @@ const getMovies = (url, type, container) => {
 				alert.innerHTML = `
 					<div class="alert alert-danger d-flex justify-content-center align-items-center no-trailers" role="alert">
 					<div>
-					<i class="fas fa-exclamation-triangle"></i> <span class="text-black fw-bold">No se encontraron peliculas con ese nombre!</span>
+					<i class="fas fa-exclamation-triangle"></i> <span class="text-black fw-bold">No se encontraron peliculas!</span>
 					</div>
 					`;
 				document.body.prepend(alert);
@@ -512,6 +512,7 @@ const getColor = (vote) => {
 form.addEventListener("submit", (e) => {
 	e.preventDefault();
 
+	let searchTerm;
 	searchTerm = search.value;
 	selectedGenre = [];
 	setGenre();
