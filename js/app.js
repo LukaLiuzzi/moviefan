@@ -702,12 +702,13 @@ getMovies(request.fetchTopRated, "top-rated", topRatedMovies);
 
 // SWIPER
 const swiperTrending = new Swiper(".swiper-container-trending", {
-	slidesPerGroup: 1,
-	loop: true,
 	autoplay: {
 		delay: 3000,
 	},
 	speed: 1000,
+	centeredSlides: true,
+	centeredSlidesBounds: true,
+	rewind: true,
 	grabCursor: true,
 	navigation: {
 		nextEl: ".swiper-button-next",
@@ -730,12 +731,13 @@ const swiperTrending = new Swiper(".swiper-container-trending", {
 });
 
 const swiperTopRated = new Swiper(".swiper-container-top-rated", {
-	slidesPerGroup: 1,
-	loop: true,
 	autoplay: {
 		delay: 5000,
 	},
 	speed: 1000,
+	centeredSlides: true,
+	centeredSlidesBounds: true,
+	rewind: true,
 	grabCursor: true,
 	navigation: {
 		nextEl: ".swiper-button-next",
