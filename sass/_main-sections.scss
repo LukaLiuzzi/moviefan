@@ -18,6 +18,7 @@ header {
 		border-radius: 5px;
 		cursor: pointer;
 		text-transform: uppercase;
+		margin: 0.5rem;
 
 		&:hover {
 			color: $white;
@@ -189,7 +190,6 @@ header {
 		gap: 2rem;
 		margin: 3rem 0;
 		color: $gray;
-		width: 95%;
 
 		#prev,
 		#next {
@@ -215,8 +215,6 @@ header {
 }
 
 .footer {
-	display: flex;
-	justify-content: space-around;
 	background-color: $dark-gray;
 
 	.contact {

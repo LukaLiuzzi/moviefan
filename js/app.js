@@ -1,6 +1,9 @@
 "use strict";
-// Declaration of variables
-// API variables
+
+// * DECLARATION OF VARIABLES
+
+// * API VARIABLES
+
 const api_key = "api_key=e11854d9b2dd14d971cfa32f0cc594d7";
 
 const base_url = "https://api.themoviedb.org/3";
@@ -102,7 +105,8 @@ const request = {
 	)}`,
 };
 
-// DOM variables
+// * DOM VARIABLES
+
 const movies = document.getElementById("movies");
 const trendingMovies = document.getElementById("trending-movies");
 const topRatedMovies = document.getElementById("top-rated-movies");
@@ -119,30 +123,35 @@ const prevTrailerArrow = document.getElementById("left-arrow");
 const nextTrailerArrow = document.getElementById("right-arrow");
 const moviesTitle = document.getElementById("movies-title");
 const seeLaterBtn = document.getElementById("see-later");
-const year = new Date();
 
-// Pagination variables
+// * PAGINATION VARIABLES
+
 let currentPage = 1;
 let nextPage = 2;
 let prevPage = 3;
 let lastUrl = "";
 let totalPages = 100;
 
-// Trailers variables
+// * TRAILERS VARIABLES
+
 let activeSlide = 0;
 let totalVideos = 0;
 
-// See Later variables
+// * SEE LATER VARIABLES
+
 const seeLaterMovies = JSON.parse(localStorage.getItem("SeeLaterMovies")) || [];
 
-// Functions
+// * FUNCTIONS
 
-// Scroll
+// * SCROLL
+
 const scrollToMovies = () => {
 	setTimeout(() => {
 		moviesTitle.scrollIntoView({ block: "start", behavior: "smooth" });
 	}, 300);
 };
+
+// * RENDER
 
 const render = (movie, type) => {
 	const {
@@ -275,7 +284,7 @@ const render = (movie, type) => {
 	}
 };
 
-// Fetching API
+// * FETCHING API
 
 const getMovies = (url, type, container) => {
 	if (type === "default") {
@@ -311,11 +320,13 @@ const getMovies = (url, type, container) => {
 		});
 };
 
-// Showing data in DOM
-document.getElementById("copy").textContent =
-	"All rights reserved • " + year.getFullYear();
+// * SHOWING DATA IN DOM
 
-// Show Movies
+document.getElementById("copy").textContent =
+	"All rights reserved • " + new Date().getFullYear();
+
+// * SHOW MOVIES
+
 const showMovies = (data, type, container) => {
 	if (type === "see-later") {
 		movies.innerHTML = "";
@@ -375,7 +386,8 @@ const showMovies = (data, type, container) => {
 	});
 };
 
-// Trailers
+// * TRAILERS
+
 const showTrailers = (movie) => {
 	fetch(base_url + "/movie/" + movie.id + "/videos?" + api_key + "&language=es")
 		.then((res) => res.json())
@@ -497,7 +509,8 @@ const closeOverlayTrailers = () => {
 document.getElementById("close-trailers-btn").onclick = () => {
 	closeOverlayTrailers();
 };
-// Painting color according to result
+// * PAINTING COLOR ACCORDING TO RESULT
+
 const getColor = (vote) => {
 	if (vote >= 7.5) {
 		return "text-success";
@@ -508,7 +521,8 @@ const getColor = (vote) => {
 	}
 };
 
-// Search and paint
+// * SEARCH AND PAINT
+
 form.addEventListener("submit", (e) => {
 	e.preventDefault();
 
@@ -531,7 +545,8 @@ form.addEventListener("submit", (e) => {
 	scrollToMovies();
 });
 
-// Filter by Genres
+// * FILTER BY GENRES
+
 let selectedGenre = [];
 
 const setGenre = () => {
@@ -569,7 +584,8 @@ const setGenre = () => {
 };
 setGenre();
 
-// Show genre selected
+// * SHOW GENRE SELECTED
+
 const highlightSelection = () => {
 	const tags = document.querySelectorAll(".dropdown-item");
 	tags.forEach((tag) => {
@@ -584,7 +600,8 @@ const highlightSelection = () => {
 	}
 };
 
-// Clear filter buttons
+// * CLEAR FILTER BUTTONS
+
 const clearBtn = () => {
 	const clearBtn = document.getElementById("clear");
 	if (!clearBtn) {
@@ -603,7 +620,8 @@ const clearBtn = () => {
 	}
 };
 
-// Find genre
+// * FIND GENRE
+
 const findGenre = (Ids) => {
 	const genresMoviesNames = genres
 		.filter((gen) => Ids.includes(gen.id))
@@ -612,7 +630,8 @@ const findGenre = (Ids) => {
 	return genresMoviesNames.join(", ");
 };
 
-// Pagination
+// * PAGINATION
+
 const pageCall = (page) => {
 	let urlSplit = lastUrl.split("?");
 	let queryParams = urlSplit[1].split("&");
@@ -646,7 +665,8 @@ next.addEventListener("click", () => {
 	scrollToMovies();
 });
 
-// See Later
+// * SEE LATER
+
 const addSeeLaterMovies = async (id, type) => {
 	const response = await fetch(
 		base_url + "/movie/" + id + "?" + api_key + "&language=es"
@@ -695,12 +715,14 @@ const changeSeeLaterBtn = (id, type) => {
 	}
 };
 
-// Painting default results
+// * CALLING DEFAULT FUNCTIONS
+
 getMovies(final_url, "default", movies);
 getMovies(request.fetchTrending, "trending", trendingMovies);
 getMovies(request.fetchTopRated, "top-rated", topRatedMovies);
 
-// SWIPER
+// * SWIPERJS
+
 const swiperTrending = new Swiper(".swiper-container-trending", {
 	autoplay: {
 		delay: 3000,
