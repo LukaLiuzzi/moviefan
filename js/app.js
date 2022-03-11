@@ -456,11 +456,9 @@ const showVideos = () => {
 	});
 
 	dots.forEach((dot, index) => {
-		if (activeSlide === index) {
-			dot.classList.add("active");
-		} else {
-			dot.classList.remove("active");
-		}
+		activeSlide === index
+			? dot.classList.add("active")
+			: dot.classList.remove("active");
 	});
 
 	document.querySelector("html").classList.add("stop-scrolling");
@@ -468,22 +466,14 @@ const showVideos = () => {
 
 prevTrailerArrow.addEventListener("click", () => {
 	stopVideos();
-	if (activeSlide > 0) {
-		activeSlide--;
-	} else {
-		activeSlide = totalVideos - 1;
-	}
+	activeSlide > 0 ? activeSlide-- : (activeSlide = totalVideos - 1);
 
 	showVideos();
 });
 
 nextTrailerArrow.addEventListener("click", () => {
 	stopVideos();
-	if (activeSlide < totalVideos - 1) {
-		activeSlide++;
-	} else {
-		activeSlide = 0;
-	}
+	activeSlide < totalVideos - 1 ? activeSlide++ : (activeSlide = 0);
 
 	showVideos();
 });
