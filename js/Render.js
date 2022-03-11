@@ -33,8 +33,8 @@ const render = (movie, type) => {
 					${overview !== "" ? overview : "No hay información "}
 					</p>
 					<button id="${type}-${id}" class="btn btn-secondary fs-4">Ver trailer</button>
-					<button id="see-later-${type}-${id}" class="btn btn-warning fs-4">+</button>
-					<button id="remove-see-later-${type}-${id}" class="btn btn-danger fs-4">-</button>
+					<button id="see-later-${type}-${id}" class="btn btn-warning fs-4 m-2">+ Ver mas tarde</button>
+					<button id="remove-see-later-${type}-${id}" class="btn btn-danger fs-4 m-2">- Ver mas tarde</button>
 				</div>
 			</div>
 		</div>`;
@@ -61,8 +61,8 @@ const render = (movie, type) => {
 			${overview !== "" ? overview : "No hay información "}
 			</p>
 			<button id="${type}-${id}" class="btn btn-secondary fs-4">Ver trailer</button>
-			<button id="see-later-${type}-${id}" class="btn btn-warning fs-4">+</button>
-			<button id="remove-see-later-${type}-${id}" class="btn btn-danger fs-4">-</button>
+			<button id="see-later-${type}-${id}" class="btn btn-warning fs-4 m-2">+ Ver mas tarde</button>
+			<button id="remove-see-later-${type}-${id}" class="btn btn-danger fs-4 m-2">- Ver mas tarde</button>
 		</div>
 	</div>`;
 
@@ -88,8 +88,8 @@ const render = (movie, type) => {
 			${overview !== "" ? overview : "No hay información "}
 			</p>
 			<button id="${type}-${id}" class="btn btn-secondary fs-4">Ver trailer</button>
-			<button id="see-later-${type}-${id}" class="btn btn-warning fs-4">+</button>
-			<button id="remove-see-later-${type}-${id}" class="btn btn-danger fs-4">-</button>
+			<button id="see-later-${type}-${id}" class="btn btn-warning fs-4 m-2">+ Ver mas tarde</button>
+			<button id="remove-see-later-${type}-${id}" class="btn btn-danger fs-4 m-2">- Ver mas tarde</button>
 		</div>
 	</div>`;
 
@@ -118,8 +118,8 @@ const render = (movie, type) => {
 					${overview !== "" ? overview : "No hay información "}
 					</p>
 					<button id="${type}-${id}" class="btn btn-secondary fs-4">Ver trailer</button>
-					<button id="see-later-${type}-${id}" class="btn btn-warning fs-4">+</button>
-					<button id="remove-see-later-${type}-${id}" class="btn btn-danger fs-4">-</button>
+					<button id="see-later-${type}-${id}" class="btn btn-warning fs-4 m-2">+ Ver mas tarde</button>
+					<button id="remove-see-later-${type}-${id}" class="btn btn-danger fs-4 m-2">- Ver mas tarde</button>
 				</div>
 			</div>
 		</div>`;
