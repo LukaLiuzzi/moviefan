@@ -1,20 +1,20 @@
 // * API VARIABLES
 
-const api_key = "api_key=e11854d9b2dd14d971cfa32f0cc594d7";
+export const api_key = "api_key=e11854d9b2dd14d971cfa32f0cc594d7";
 
-const base_url = "https://api.themoviedb.org/3";
+export const base_url = "https://api.themoviedb.org/3";
 
-const final_url =
+export const final_url =
 	base_url +
 	"/discover/movie?" +
 	api_key +
 	"&language=es&sort_by=popularity.desc";
 
-const img_url = "https://image.tmdb.org/t/p/w500";
+export const img_url = "https://image.tmdb.org/t/p/w500";
 
-const search_url = base_url + "/search/movie?" + api_key;
+export const search_url = base_url + "/search/movie?" + api_key;
 
-const genres = [
+export const genres = [
 	{
 		id: 28,
 		name: "Acción",
@@ -93,7 +93,7 @@ const genres = [
 	},
 ];
 
-const request = {
+export const request = {
 	fetchPopular: `${base_url}/discover/movie?${api_key}&language=es&sort_by=popularity.desc`,
 	fetchTrending: `${base_url}/trending/movie/day?${api_key}&language=es`,
 	fetchTopRated: `${base_url}/discover/movie?${api_key}&language=es&sort_by=vote_average.desc&vote_count.gte=5000&page=${Math.ceil(
@@ -103,39 +103,24 @@ const request = {
 
 // * DOM VARIABLES
 
-const movies = document.getElementById("movies");
-const trendingMovies = document.getElementById("trending-movies");
-const topRatedMovies = document.getElementById("top-rated-movies");
-const search = document.getElementById("search");
-const form = document.getElementById("form");
-const tags = document.getElementById("tags");
-const prev = document.getElementById("prev");
-const current = document.getElementById("current");
-const next = document.getElementById("next");
-const overlayTrailerContent = document.getElementById(
+export const movies = document.getElementById("movies");
+export const trendingMovies = document.getElementById("trending-movies");
+export const topRatedMovies = document.getElementById("top-rated-movies");
+export const search = document.getElementById("search");
+export const form = document.getElementById("form");
+export const tags = document.getElementById("tags");
+export const prev = document.getElementById("prev");
+export const current = document.getElementById("current");
+export const next = document.getElementById("next");
+export const overlayTrailerContent = document.getElementById(
 	"overlay-trailer-content"
 );
-const prevTrailerArrow = document.getElementById("left-arrow");
-const nextTrailerArrow = document.getElementById("right-arrow");
-const moviesTitle = document.getElementById("movies-title");
-const seeLaterBtn = document.getElementById("see-later");
-
-// * PAGINATION VARIABLES
-
-let currentPage = 1;
-let nextPage = 2;
-let prevPage = 3;
-let lastUrl = "";
-let totalPages = 100;
-
-// * TRAILERS VARIABLES
-
-let activeSlide = 0;
-let totalVideos = 0;
+export const prevTrailerArrow = document.getElementById("left-arrow");
+export const nextTrailerArrow = document.getElementById("right-arrow");
+export const moviesTitle = document.getElementById("movies-title");
+export const seeLaterBtn = document.getElementById("see-later");
 
 // * SEE LATER VARIABLES
 
-const seeLaterMovies = JSON.parse(localStorage.getItem("SeeLaterMovies")) || [];
-
-// * GENRES VARIABLES
-let selectedGenre = [];
+export const seeLaterMovies =
+	JSON.parse(localStorage.getItem("SeeLaterMovies")) || [];

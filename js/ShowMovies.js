@@ -1,7 +1,16 @@
+import * as variable from "./Variables.js";
+import render from "./Render.js";
+import {
+	changeSeeLaterBtn,
+	addSeeLaterMovies,
+	removeSeeLaterMovies,
+} from "./SeeLater.js";
+import { showTrailers } from "./Trailers.js";
+
 const showMovies = (data, type, container) => {
 	if (type === "see-later") {
 		movies.innerHTML = "";
-		moviesTitle.textContent = "Ver mas tarde";
+		variable.moviesTitle.textContent = "Ver mas tarde";
 
 		if (document.querySelector(".pagination")) {
 			document.querySelector(".pagination").remove();
@@ -56,3 +65,4 @@ const showMovies = (data, type, container) => {
 		}
 	});
 };
+export default showMovies;

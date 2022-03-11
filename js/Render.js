@@ -1,3 +1,7 @@
+import * as variable from "./Variables.js";
+import { findGenre } from "./Genres.js";
+import getColor from "./GetColor.js";
+
 const render = (movie, type) => {
 	const {
 		title,
@@ -7,6 +11,7 @@ const render = (movie, type) => {
 		release_date,
 		genre_ids,
 		id,
+		genres,
 	} = movie;
 
 	switch (type) {
@@ -14,7 +19,7 @@ const render = (movie, type) => {
 			return `<div class="movie">
 			<img src="${
 				poster_path
-					? img_url + poster_path
+					? variable.img_url + poster_path
 					: "https://picsum.photos/id/237/1000/1000"
 			}" alt="${title}" />
 			<div class="image-overlay">
@@ -42,7 +47,7 @@ const render = (movie, type) => {
 		case "trending":
 			return `<img src="${
 				poster_path
-					? img_url + poster_path
+					? variable.img_url + poster_path
 					: "https://picsum.photos/id/237/1000/1000"
 			}" alt="${title}" />
 	<div class="image-overlay">
@@ -69,7 +74,7 @@ const render = (movie, type) => {
 		case "top-rated":
 			return `<img src="${
 				poster_path
-					? img_url + poster_path
+					? variable.img_url + poster_path
 					: "https://picsum.photos/id/237/1000/1000"
 			}" alt="${title}" />
 	<div class="image-overlay">
@@ -97,7 +102,7 @@ const render = (movie, type) => {
 			return `<div class="movie">
 			<img src="${
 				poster_path
-					? img_url + poster_path
+					? variable.img_url + poster_path
 					: "https://picsum.photos/id/237/1000/1000"
 			}" alt="${title}" />
 			<div class="image-overlay">
@@ -128,3 +133,4 @@ const render = (movie, type) => {
 			console.warn("type not found");
 	}
 };
+export default render;

@@ -1,3 +1,15 @@
+import * as variable from "./Variables.js";
+import showMovies from "./ShowMovies.js";
+
+// * VARIABLES
+export let lastUrl;
+export let currentPage;
+export let prevPage;
+export let nextPage = 1;
+export let totalPages = 100;
+
+// * FETCH DATA
+
 const getMovies = (url, type, container) => {
 	if (type === "default") {
 		lastUrl = url;
@@ -31,3 +43,4 @@ const getMovies = (url, type, container) => {
 			}
 		});
 };
+export default getMovies;

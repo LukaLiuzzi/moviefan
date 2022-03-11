@@ -1,4 +1,13 @@
-const pageCall = (page) => {
+import * as variable from "./Variables.js";
+import scrollToMovies from "./Scroll.js";
+import getMovies, {
+	lastUrl,
+	prevPage,
+	nextPage,
+	totalPages,
+} from "./GetMovies.js";
+
+export const pageCall = (page) => {
 	let urlSplit = lastUrl.split("?");
 	let queryParams = urlSplit[1].split("&");
 	let key = queryParams[queryParams.length - 1].split("=");
@@ -17,14 +26,14 @@ const pageCall = (page) => {
 	}
 };
 
-const prevPag = prev.addEventListener("click", () => {
+export const prevPag = prev.addEventListener("click", () => {
 	if (prevPage > 0) {
 		pageCall(prevPage);
 	}
 	scrollToMovies();
 });
 
-const nextPag = next.addEventListener("click", () => {
+export const nextPag = next.addEventListener("click", () => {
 	if (nextPage <= totalPages) {
 		pageCall(nextPage);
 	}

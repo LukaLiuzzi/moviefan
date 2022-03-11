@@ -7,3 +7,4 @@ const getColor = (vote) => {
 		return "text-danger";
 	}
 };
+export default getColor;

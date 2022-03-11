@@ -1,4 +1,4 @@
-const swiperTrending = new Swiper(".swiper-container-trending", {
+export const swiperTrending = new Swiper(".swiper-container-trending", {
 	autoplay: {
 		delay: 3000,
 	},
@@ -27,7 +27,7 @@ const swiperTrending = new Swiper(".swiper-container-trending", {
 	},
 });
 
-const swiperTopRated = new Swiper(".swiper-container-top-rated", {
+export const swiperTopRated = new Swiper(".swiper-container-top-rated", {
 	autoplay: {
 		delay: 5000,
 	},

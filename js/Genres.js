@@ -1,27 +1,35 @@
-const setGenre = () => {
+import * as variable from "./Variables.js";
+import getMovies from "./GetMovies.js";
+import scrollToMovies from "./Scroll.js";
+
+let copy = Object.assign([], variable.selectedGenre);
+
+// * SET GENRE
+
+export const setGenre = () => {
 	tags.innerHTML = "";
-	genres.forEach((genre) => {
+	variable.genres.forEach((genre) => {
 		const genreLi = document.createElement("LI");
 		genreLi.classList.add("dropdown-item");
 		genreLi.id = genre.id;
 		genreLi.textContent = genre.name;
 		genreLi.addEventListener("click", () => {
-			if (selectedGenre.length === 0) {
-				selectedGenre.push(genre.id);
+			if (copy.length === 0) {
+				copy.push(genre.id);
 			} else {
-				if (selectedGenre.includes(genre.id)) {
-					selectedGenre.forEach((id, idx) => {
+				if (copy.includes(genre.id)) {
+					copy.forEach((id, idx) => {
 						if (id === genre.id) {
-							selectedGenre.splice(idx, 1);
+							copy.splice(idx, 1);
 						}
 					});
 				} else {
-					selectedGenre.push(genre.id);
+					copy.push(genre.id);
 				}
 			}
 			movies.innerHTML = "";
 			getMovies(
-				final_url + "&with_genres=" + encodeURI(selectedGenre.join(",")),
+				variable.final_url + "&with_genres=" + encodeURI(copy.join(",")),
 				"default",
 				movies
 			);
@@ -34,14 +42,14 @@ const setGenre = () => {
 
 // * SHOW GENRE SELECTED
 
-const highlightSelection = () => {
+export const highlightSelection = () => {
 	const tags = document.querySelectorAll(".dropdown-item");
 	tags.forEach((tag) => {
 		tag.classList.remove("highlight");
 	});
 	clearBtn();
-	if (selectedGenre.length != 0) {
-		selectedGenre.forEach((id) => {
+	if (copy.length != 0) {
+		copy.forEach((id) => {
 			const highlightedTag = document.getElementById(id);
 			highlightedTag.classList.add("highlight");
 		});
@@ -50,7 +58,7 @@ const highlightSelection = () => {
 
 // * CLEAR FILTER BUTTONS
 
-const clearBtn = () => {
+export const clearBtn = () => {
 	const clearBtn = document.getElementById("clear");
 	if (!clearBtn) {
 		const clear = document.createElement("LI");
@@ -58,10 +66,10 @@ const clearBtn = () => {
 		clear.id = "clear";
 		clear.textContent = "Limpiar filtros";
 		clear.addEventListener("click", () => {
-			selectedGenre = [];
+			copy = [];
 			setGenre();
 			movies.innerHTML = "";
-			getMovies(final_url, "default", movies);
+			getMovies(variable.final_url, "default", movies);
 			scrollToMovies();
 		});
 		tags.append(clear);
@@ -70,8 +78,8 @@ const clearBtn = () => {
 
 // * FIND GENRE
 
-const findGenre = (Ids) => {
-	const genresMoviesNames = genres
+export const findGenre = (Ids) => {
+	const genresMoviesNames = variable.genres
 		.filter((gen) => Ids.includes(gen.id))
 		.map((el) => el.name);
 

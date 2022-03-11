@@ -1,5 +1,19 @@
-const showTrailers = (movie) => {
-	fetch(base_url + "/movie/" + movie.id + "/videos?" + api_key + "&language=es")
+import * as variable from "./Variables.js";
+
+// * VARIABLES
+let totalVideos = 0;
+let activeSlide = 0;
+
+// * FETCH DATA
+export const showTrailers = (movie) => {
+	fetch(
+		variable.base_url +
+			"/movie/" +
+			movie.id +
+			"/videos?" +
+			variable.api_key +
+			"&language=es"
+	)
 		.then((res) => res.json())
 		.then((videoData) => {
 			if (videoData) {
@@ -31,7 +45,7 @@ const showTrailers = (movie) => {
 
 					`;
 
-					overlayTrailerContent.innerHTML = content;
+					variable.overlayTrailerContent.innerHTML = content;
 					showVideos();
 				} else {
 					const alert = document.createElement("div");
@@ -51,7 +65,8 @@ const showTrailers = (movie) => {
 		});
 };
 
-const showVideos = () => {
+// * SHOW DATA
+export const showVideos = () => {
 	const embedClasses = document.querySelectorAll(".embed");
 	const dots = document.querySelectorAll(".dot");
 	totalVideos = embedClasses.length;
@@ -74,21 +89,29 @@ const showVideos = () => {
 	document.querySelector("html").classList.add("stop-scrolling");
 };
 
-const trailerPrev = prevTrailerArrow.addEventListener("click", () => {
-	stopVideos();
-	activeSlide > 0 ? activeSlide-- : (activeSlide = totalVideos - 1);
+// * EVENTS LISTENERS
+export const trailerPrev = variable.prevTrailerArrow.addEventListener(
+	"click",
+	() => {
+		stopVideos();
+		activeSlide > 0 ? activeSlide-- : (activeSlide = totalVideos - 1);
 
-	showVideos();
-});
+		showVideos();
+	}
+);
 
-const trailerNext = nextTrailerArrow.addEventListener("click", () => {
-	stopVideos();
-	activeSlide < totalVideos - 1 ? activeSlide++ : (activeSlide = 0);
+export const trailerNext = variable.nextTrailerArrow.addEventListener(
+	"click",
+	() => {
+		stopVideos();
+		activeSlide < totalVideos - 1 ? activeSlide++ : (activeSlide = 0);
 
-	showVideos();
-});
+		showVideos();
+	}
+);
 
-let stopVideos = () => {
+// * STOP VIDEOS WHEN CLOSE OR CHANGE VIDEO
+export let stopVideos = () => {
 	let videos = document.querySelectorAll("iframe, video");
 	Array.prototype.forEach.call(videos, (video) => {
 		if (video.tagName.toLowerCase() === "video") {
@@ -100,13 +123,16 @@ let stopVideos = () => {
 	});
 };
 
-const closeOverlayTrailers = () => {
+// * CLOSE OVERLAY
+export const closeOverlayTrailers = () => {
 	document.getElementById("overlay-trailers").style.width = "0%";
 	stopVideos();
 	document.querySelector("html").classList.remove("stop-scrolling");
 };
 
-const trailerClose = (document.getElementById("close-trailers-btn").onclick =
-	() => {
+// * EVENT LISTENER
+export const trailerClose = document
+	.getElementById("close-trailers-btn")
+	.addEventListener("click", () => {
 		closeOverlayTrailers();
 	});

@@ -1,5 +1,8 @@
+import * as variable from "./Variables.js";
+
 const scrollToMovies = () => {
 	setTimeout(() => {
-		moviesTitle.scrollIntoView({ block: "start", behavior: "smooth" });
+		variable.moviesTitle.scrollIntoView({ block: "start", behavior: "smooth" });
 	}, 300);
 };
+export default scrollToMovies;
